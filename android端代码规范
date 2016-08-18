@@ -1,0 +1,460 @@
+---
+title: android端代码规范
+tags: android,代码规范
+---
+[toc]
+
+## 1--命名规范
+
+### 包命名
+**命名规则：** 一个唯一包名的前缀通常是全部小写的ASCII字母并且是一个顶级域名，比如com，edu，gov，mil，net，org。包名的后续部分根据不同机构各自内部的命名规范而不尽相同。这类命名规范可能以特定目录名的组成来区分部门 (department)、项目(project)、机器(machine)，或注册名(login names)。
+> 例子： `com.zte.bestwill.xx`,`com.zte.bestwilldata.xx`
+
+### 类和接口命名
+**命名规则：** 类名是个一名词，采用驼峰的方式，每个单词的首字母大写。尽量使你的类名简洁而富于描述。使用完整单词，避免缩写词(除非该缩写词被更广泛使用，像 URL，HTML)。接口一般要使用Interface后缀。
+> 例子：`class Raster` ,`class ImageSprite`,`interface NetworkInterface`
+
+### 方法的命名
+**命名规则：** 方法名是一个动词，采用大小写混合的方式，第一个单词的首字母小写，其后单词的首字母大写。命名的第一指导精神是要能看懂方法做的什么工作。
+> 例子：`public void run()`,`public String getBookName()`
+
+常用的方法命名规则：
+- 有返回值的方法：一般要求在被访问的字段名前加上get，如getFirstName()，getLastName()。一般来说，get前缀方法返回的是单个值，find前缀的方法返回的是列表值。
+- 类的设置方法（一般返回类型为void）：被访问字段名的前面加上前缀set，如 setFirstName(),setLastName()。  
+- 类的布尔型的判断方法：一般要求方法名使用单词is或has做前缀，如isPersistent()，isString()。或者使用具有逻辑意义的单词，例如equal或equals。 
+- 类的普通方法：一般采用完整的英文描述说明成员方法功能，第一个单词尽可能采用动词，首字母小写，如openFile（），addCount（）。 
+- 构造方法：应该用递增的方式写（参数多的写在后面）。
+- toString()方法：一般情况下，每个类都应该定义toString(),其格式为：public String toString（）。
+
+### 变量命名
+**命名规则：** 第一个单词的首字母小写，其后单词的首字母大写。变量名不应以下划线或美元符号开头，尽管这在语法上是允许的。变量名应简短且富于描述并应该易于记忆，即能够指出其用途。尽量避免单个字符的变量名，除非是一次性的临时变量。临时变量通常被取名为i、j、k、m和n，它们一般用于整型；c、d、e，它们一般用于字符型。变量命名也必须使用驼峰规则，但是首字母必须小写，变量名尽可能的使用名词或名词词组。同样要求简单易懂，不允许出现无意义的单词。
+> 例子： `bookName`
+
+
+**请注意：** android中的控件命名需要添加上相应控件的缩写前缀和下划线。
+> 例子：`tv_bookName`
+
+### 常量命名
+**命名规则：** 类常量的声明，应该全部大写，单词间用下划线隔开。 
+> 例子：`static fianl int MIN_WIDTH=4;`
+
+### 异常命名
+**命名规则：** 自定义异常的命名必须以Exception为结尾，以明确标示为一个异常。
+> 例子： `IOException`,`FileNotFoundException`
+
+### layout命名
+**命名规则：** layout.xml的命名必须以全部单词小写，单词间以下划线分割，并且使用名词或名词词组，使用*组件类名\_模块名\_功能名*来命名。
+>例子：`activity_login.xml`,`fragment_college_head.xml`,`item_college_briefinfo`
+
+### Id命名
+**命名规则：** layout中所使用的id必须以全部单词小写，单词间以下划线分割，并且使用名词或名词词组，并且要求能够通过id直接理解当前组件要实现的功能。命名模式为：view缩写\_模块名称\_view的逻辑名称。
+> 例子：`@+id/tv_school_name`
+
+### 资源命名
+**命名规则：** layout中所使用的所有资源（如drawable,style等）命名必须以全部单词小写，单词间以下划线分割，并且尽可能的使用名词或名词组，即使用组件名\_模块名\_用途来命名。如果为公共资源，如分割线等，则直接以用途来命名。
+> 例子： `menu_icon_navigate.png`
+> 公共资源：`line.png`,`separator.png`
+
+**常用数据类型和控件的缩写：**
++ CheckBox ：chB\_+描述（checkbox）
++ Boolean  is+描述
++ Button ：btn\_+描述
++ EditText：edt\_+描述
++ ImageView ：igv\_+描述	(img imageview)
++ List: l\_+描述			
++ ListView：lv\_+描述 	
++ ProgressBar：proBar\_+描述
++ RadioButton ：rdoBtn\_+描述
++ ScrollView：sc\_+描述
++ Tab：tab\_+描述
++ TextView ：tv\_+描述 
++ String：str+描述  
++ WebView：webView\_+描述
++ GridView：gv\_+描述
++ View：v\_+描述(尽量少用)
+
+**以下为原文件的命名规则，仅供参考：**
++ AnalogClock ：anaClk\_+描述
++ AutoCompleteTextView：autoTxt\_+描述
++ CalendarView： caView\_+描述
++ CheckedTextView ： chkTxtView\_+描述
++ Chronometer：cmt\_+描述
++ DataTime：dt+描述
++ DatePicker ：dtPk\_+描述
++ DialerFilter： diaF\_+描述
++ DigitalClock ：DgtClk\_+描述
++ ExpandableList: epdLt\_+描述
++ ExpandableListView: epdLtView\_+描述
++ Gallery：gal\_+描述
++ ImageButton ：imgBtn\_+描述
++ ImageSwitcher：imgSwt\_+描述
++ MapView: mapView\_+描述
++ MultiAutoCompleteTextView：mlAutoTxt\_+描述
++ Object：obj+描述
++ RadioGroup： rdoG\_+描述
++ RatingBar：ratBar\_+描述
++ SearchView：schView\_+描述
++ SeekBar：skBar\_+描述
++ Short：shr +描述  
++ Single：sng+描述  
++ Spinner：spn\_+描述
++ TextSwitcher：txtSwt\_+描述
++ TimePicker ：tmPk\_+描述 
++ ToggleButton ：tglBtn\_+描述     
++ VideoView：vdoView\_+描述
++ ZoomControls：zmCtrl\_+描述 
+
+
+
+## 2--注释
+Java 程序有两类注释：实现注释(implementation comments)和文档注释(document comments)。实现注释是使用/\*...\*/和//界定的注释。文档注释(被称为"doc comments")由/\*\*...\*/界定。文档注释可以通过javadoc工具转换成HTML文件。
+
+### 文件注释
+所有的源文件都应该在开头有一个注释，其中列出类名、版本信息、日期和版权声明。 
+> 例子：  
+```java
+	/* 
+    * 文件名 
+    * 包含类名列表 
+    * 版本信息，版本号
+    * 创建日期
+    * 版权声明 
+  */ 
+```
+
+### 类注释
+每一个类都要包含如下格式的注释，以说明当前类的功能等。 
+> 例子：
+```java
+	/** 
+     * 类名
+     * @author作者 （最好写所属的团体）
+     * 实现的主要功能
+     * 需要注意的事项
+   */
+```
+
+### 方法注释
+每一个方法都要包含如下格式的注释，包括当前方法的用途，当前方法参数的含义，当前方法返回值的内容和抛出异常的列表。
+> 例子：
+ ```java
+	/** 
+   *方法的一句话概述
+   *法详述（简单方法可不必详述)
+   *@param s 说明参数含义 
+   *@return 说明返回值含义
+   *@throws IOException 说明发生此异常的条件
+   *@throws NullPointerException 说明发生此异常的条件
+ */ 
+ ```
+
+### 类成员变量和常量注释
+成员变量和常量需要使用javadoc形式的注释，以说明当前变量或常量的含义 。
+**请注意**：请尽量采用能清晰表达含义的命名方式来命名，尽量减少此类注释。如确实需要使用，请采用如下的注释方式：
+
+> `private int userNum //用户数量`
+
+
+
+## 3--代码风格
+
+### 缩进
+记住一点，不要混用，我们统一使用Eclipse和androistudio的tab键进行缩进就可以。
+
+### 中文
+java源代码中尽量不要出现中文，最多注释中可以出现中文，中文统一写在strings.xml中。
+
+### 空行
+将逻辑不相关的代码分割开，增加代码的可读性。
+以下是一些可以空格的先例：
++ 一个源文件的两个片段(section)之间 
++ 类声明和接口声明之间 
++ 两个方法之间
++ 方法内的局部变量和方法的第一条语句之间 
++ 一个方法内的两个逻辑段之间，用以提高可读性
+
+### 方法不要超过十五行
+一个方法尽量不要超过15行，如果方法太长，说明当前方法业务逻辑已经非常复杂，那么就需要进行方法拆分，保证每个方法只作一件事。
+
+### 参数和返回值
++ 一个方法的参数尽可能的不要超过4个！  
++ 如果一个方法返回的是一个错误码，请使用异常！ 
++ 参数数量多于4个要考虑封装成对象了；
++ 尽可能不要使用null作为返回值，替代为异常或者使用空变量，如返回List则可以使用Collections.emptyList()。
++ 能立马返回的值，请不要再创建变量存储它。`return getUser(name,pwd)`,`return isOld>2 ? true : false`
+
+### 神秘的数
+代码中不允许出现单独的数字，字符！如果需要使用数字或字符，则将它们按照含义封装为静态常量！（for语句中除外）。
+
+
+### 控制语句
+判断中如有常量，则应将常量置于判断式的左侧。如：`if (true == isAdmin())` 
+尽量不使用三目条件的嵌套。 判断条件错误或冗余，应先进行空判断，再进行其他判断，必然true 或false的条件没有必要
+所有if 语句必须用{}包括起来，即便是只有一句(为了提高可读性）：
+```java
+if (true){  
+//do something...... 
+} 
+if (true)  
+i = 0; //不要使用这种   
+```
+需要多次去获取的值请用临时变量存储起来：
+```java
+while
+(index < products.getCount()){ 
+ //每次都会执行一次getCount()方法，若此方法耗时则会影响执行效//率而且可能带来同步问题，若有同步需求，请使用同步块或同步方法 
+}  
+
+Final int count = products.getCount(); //推荐方式
+while(index < count){ 
+} 
+```
+switch 的每项case 不要超过5行，可以提取为方法
+```java
+switch(i){
+	case 2:
+          getSomthing();
+          break;
+    case 3:
+    	  doSomthing();
+          break;
+     default:
+     	 break;
+}
+```
+
+### 异常捕捉
++ 通常的思想是只对错误采用异常处理：逻辑和编程错误，设置错误，被破坏的数据，资+ + 源耗尽，等等。
++ 通常的法则是系统在正常状态下以及无重载和硬件失效状态下，不应产生任何异常。 
++ 最小化从一个给定的抽象类中导出的异常的个数。对于经常发生的可预计事件不要采用异常。
++ 不要使用异常实现控制结构。
++ 若有finally子句，则不要在try块中直接返回，亦不要在finally中直接返回。
+```java
+public class Test {
+	public static void main(String args[]) {
+		System.out.println(ddest());
+	}
+	  public static int ddest() {
+		try {
+			return 1;
+		} catch (Exception e) {
+			return 2;
+		} finally {
+            return 3;
+        }
+	         }
+     }
+  }
+```
+正常情况下，代码执行顺序为，try (catch)-finally;当try有return时，finally 会被先执行，在执行try中的return，从而导致finally 不做最后处理；Finally 返回时，会覆盖掉try catch 的返回，从而只输出结果：3；
+
+
+### 访问控制
+若没有足够理由，不要把实例或类变量声明为公有。通常，实例变量无需显式的设置(set)和获取(get)，通常这作为方法调用的边缘效应(side effect)而产生。 一个具有公有实例变量的恰当例子，是类仅作为数据结构，没有行为。亦即，若你要使用一个结构(struct)而非一个类(如果java支持结构的话)，那么把类的实例变量声明为公有是合适的。
+
+### 变量赋值
++ 避免在一个语句中给多个变量赋相同的值。它很难读懂。例如： `fooBar.fChar = barFoo.lchar = 'c';`  
++ 不要将赋值运算符用在容易与相等关系运算符混淆的地方。例如： 
+```java
+if (c++ = d++) {  // AVOID! 
+ ... 
+ } 
+
+if ((c++ = d++) != 0) { 
+ ... 
+ } 
+ ```
+
+### 圆括号
+一般而言，在含有多种运算符的表达式中使用圆括号来避免运算符优先级问题，是个好方法。即使运算符的优先级对你而言可能很清楚，但对其他人未必如此。你不能假设别的程序员和你一样清楚运算符的优先级。
+> 例子：
+`if (a == b && c == d)`  //要避免
+`if ((a == b) && (c == d))`  //推荐写法
+`(x >= 0) ? x : -x `//推荐写法
+
+### 多层循环
+将循环次数最少的变量放在最外层，循环次数最多的变量放在最内层，这样比反过来的效率更高。
+>例子：
+```java
+for (int i=0; i<10; i++) {
+    for (int j=0; i<100; j++) {
+     …
+    }
+}
+```
+
+### 静态成员变量
++ public的静态成员常量，请为其添加final标识，防止被外部恶意篡改。
++ 静态变量除了常量，请不要设置为public，设置为private，并为其添加set和get方法
++ 静态变量的赋值，请小心多线程的情况，为其赋值的方法可以使用线程锁
+
+### 浮点类型数据的比较
+浮点数据类型的比较不能使用“=”去进行比较，因为float在计算的过程中的值可能为带有精度的0值，请使用`Float.compare();`方法。
+
+### byte再转回int
+byte再转回int时，请用0xff 与之相与之后在返回，一个byte跟0xff相与会先将那个byte转化成整形运算，这样，结果中的高的24个比特就总会被清0，从而避免符号位扩展。
+> `int x = val2 & 0xff`
+
+### 关于敏感词
+诸如password，ip等敏感词汇时不要使用硬编码，攻击者在通过反编译或者解码的方式，将很容易获得这些敏感的值。我们应该使用一个方法去替代这样的硬编码。
+
+`private static final String PASSWORD = "KEY_MODEL_TEACHER_PASSWORD";`
+我们将这样的敏感信息尽量放在服务端，使用一个接口去初始化改敏感信息。
+`private static final String PASSWORD = "KEY_MODEL_TEACHER_PASSWORD";
+ PASSWORD = getPassword（）`
+
+### 关于有待返回值的操作函数
+像`file.delete()`,`lock.tryLock()`等等这样的函数都会有表示操作是否成功的返回值，我们需要对这个返回值进行判断，而不是对其置之不理。
+
+```java
+public void doSomething(File file, Lock lock) {
+  if (!lock.tryLock()) {
+    // lock failed; take appropriate action
+  }
+  if (!file.delete()) {
+    // file delete failed; take appropriate action
+  }
+}
+```
+
+### 关于计算中的类型转换
+虽然在java中基本类型都有自动提升的能力（float=》double），但是在计算的过程中需要提前提升其精度以防止计算的过程中精度丢失。
+
+```java
+//如下的计算结果都是有问题的。
+float twoThirds = 2/3; //  Yields 0.0
+long millisInYear = 1_000*3_600*24*365; // Yields 1471228928
+long bigNum = Integer.MAX_VALUE + 2; // Yields -2147483647
+
+//应该改为如下的计算方式
+float twoThirds = 2f/3; // Yields 0.6666667
+long millisInYear = 1_000L*3_600*24*365; //  Yields 31_536_000_000
+long bigNum = Integer.MAX_VALUE + 2L; //Yields 2_147_483_649
+
+```
+
+### I/O流的关闭
+一般来说，如果一个方法打开一个流或其他资源，该方法应该使用try /finally块来确保在方法返回之前流或资源已经被清除了。在jdk1.7以上可以使用try-with-resource的新特性来写程序，可以将流的关闭交给jvm自己处理。对应的android api 19 以上可以使用。
+
+```java
+try (java.util.zip.ZipFile zf = new java.util.zip.ZipFile(zipFileName);
+	java.io.BufferedWriter writer = java.nio.file.Files.newBufferedWriter(outputFilePath, charset)){
+	
+		......
+}
+```
+
+### 关于奇数偶数的判断
+使用诸如`X % 2 = = 1`来检查奇数偶数是错误的，这不会工作于负数(例如，`(- 5)% 2 = = -1`)。如果此代码要检查奇数，应该使用`x % 2！= 0`来判断。
+
+
+### 关于equals
++ 将null和“ ”放在左边。
++ 不要使用equal(null)来判断，因为其值永远返回为false
+
+> `"info".equals(getString())`,`null.equals(getString())`
+
+### 聪明的泛型
+泛型申明时请尽量让聪明的编译器自己去推到泛型的具体类型，而不是自己去确定。
+
+> `List<String> strings = new ArrayList<>();`,`List<Object> strings = new ArrayList<>();`
+
+### 为静态类添加一个私有构造函数
+如果一个类里全是静态方法，暂且称该类就为静态类。为了强制其他人调用静态方法时使用静态类名.静态方法的格式，我们就为其创建一个私有构造函数，防止别人将其实例化。
+
+### 使用log
+在工程中，请使用健全的log制度，而不要因为简单而是用System.out，因为在书写上可能后者要更加方便一些，但是在维护和方便查看等等方面后者却是增加了很大难度。
+
+### 学会用isEmpty()
+使用isEmpty()方法来代替list.size=0，可以减少复杂度，提高可读性。
+
+### 合理引入新的变量
+在恰当的时候使用临时变量来存储中间结果。重用参数会降低了代码的可读性，因为开发人员将无法知道原始参数是否已发生改变。
+
+```java
+onClickItemListener(View view,int position){
+		position = position -1;
+    	dosomthing(position);
+}
+```
+
+### 不要浪费空间
+不要因为复制语句的简单，我们就滥用各种复制语句，这不光降低了可读性，并且增加了内存的开销和多余的操作。
+
+```java
+String abc = "abc";  
+String xyz = new String("");  
+xyz = abc;  
+System.out.println(xyz);
+
+//可以直接写为:
+Sring xyz = "abc"
+System.out.println(xyz)
+```
+```java
+String abc = "aaaa"
+String xyz = getSome();
+
+//可以直接写为：
+String abc = getSome();
+```
+
+### stringBuffer stringBuilder 和 String
+在大量需要拼接字符串的地方，String的效率就会变的非常低下。请改用StringBuffer / StringBuilder的，内部原因是因为String是final的，无法改变其内容，只能为其开辟新的空间返回新的字符串，在效率方面StringBuilder>StringBuffer>String，StringBuffer是线程安全的，在能确认线程安全的情况下，可以使用最快的Stringbuilder。
+
+```java
+StringBuilder  firstPartBuilder = new StringBuilder();
+firstPartBuilder.append("你输入的分数为")
+						.append(fs).append("分，科类为")
+                        .append(kl).append("，")
+                        .append("你的排名")
+                        .append(pwDefault)
+                        .append("名。");
+```
+
+
+
+## 4--性能相关
+
+### 图片
++ 尽量要.9.png处理；
++ 如果图片来自网络，进行异步加载
++ 纯色图片尽量使用代码编写
+
+### 服务端还是客户端来实现
++ 服务端可以实现的，就不要放在客户端
+
+### 数据校验
++ 数据一定要效验，例如字符型转数字型，如果转换失败一定要有缺省值；服务端响应数据是否有效要判断。
+
+### listview性能
++ 复用convertView，在getItemView中，判断convertView是否为空，如果不为空，可复用。如果couvertview中的view需要添加listerner，代码一定要在if(convertView==null){}之外。
++ 异步加载图片，item中如果包含有webimage，那么最好异步加载
++ 快速滑动时不显示图片，当快速滑动列表时（SCROLL_STATE_FLING），item中的图片或获取需要消耗资源的view，可以不显示出来；而处于其他两种状态（SCROLL_STATE_IDLE 和SCROLL_STATE_TOUCH_SCROLL），则将那些view显示出来
++ BaseAdapter避免内存溢出，如果BaseAdapter的实体类有属性非常消耗内存，可以将其保存到文件；为提高性能，可以进行缓存，并限制缓存大小。
+
+### WeakReference
+弱引用可以让您保持对对象的引用，同时允许GC在必要时释放对象，回收内存。对于那些创建便宜但耗费大量内存的对象，即希望保持该对象，又要在应用程序需要时使用，同时希望GC必要时回收时，可以考虑使用弱引用。
+
+
+### Cursor
+保证Cursor 占用的内存被及时的释放掉，而不是等待GC来处理。并且 Android明显是倾向于编 程者手动的将Cursor close掉。
+
+### 自定义view交互
+自定义View的时候，交互部分，千万不要写成线程不断刷新界面显示，而是根据TouchListener事件主动触发界面的更新。重新onDraw方法时，请勿在方法内创建对象，onDraw方法会被多次调用，当多次创建对象时，消耗内存。
+
+### layout组件化，尽量使用merge及include复用
+在xml的配置方面能够模块化的尽量模块化，在使用的xml里使用merge和include提高复用率。
+
+### 复杂布局使用RelativeLayout
+尽量减少view布局的嵌套层级，在复杂的布局里面，尽量采用relativelayout布局会减少linerlayout的嵌套层级，会大量的减少内存的使用量和界面的渲染。
+
+### 自适应屏幕
+长度使用dp替代pix，文字使用sp来代替。
+
+### 空指针判断
++ 对字符串、list、对象等要做null的空指针处理；
++ 对类型转换要做转换错误处理；如：String转int ，当String 为null或“”时，会出错；
++ 在传递数据时，进行防空指针处理，如：Activity的Intent对象及其内容，Activity的onActivityResult方法中的data对象及其内容；
+
+
