@@ -1,0 +1,30 @@
+---
+title: Broadcast Plugin Readme
+tags: 新建,模板,小书匠
+grammar_cjkRuby: true
+---
+
+
+Broadcast Plugin Readme
+
+Overview
+
+The broadcast plugin broadcasts messages to all users in the system or to specific groups. It's primarily useful for sending announcements or notifications.
+
+Installation
+
+Copy broadcast.jar into the plugins directory of your Openfire installation. The plugin will then be automatically deployed. To upgrade to a new version, copy the new broadcast.jar file over the existing file.
+
+Configuration
+
+The broadcast plugin is configured via Openfire system properties. These can be configured under Server/Server Manager/System Properties:
+plugin.broadcast.serviceName -- the name of the broadcast service. If no value is set, the default is "broadcast".
+plugin.broadcast.disableGroupPermissions -- true to allow any user to broadcast a message to a group. When false, only group members or administrators can broadcast messages to a group. The default value is false.
+plugin.broadcast.groupMembersAllowed -- true to also allow group members to send broadcast messages to groups they belong to. When false, only administrators can send broadcast messages to a group. The default value is true. Note that the property value of plugin.broadcast.disableGroupPermissions can effectively override this value by letting anyone send broadcast messages to groups.
+plugin.broadcast.allowedUsers -- the comma-delimitted list of users allowed to broadcast messages to all connected users at once. When this property isn't set, anyone is allowed to broadcast messages to all users. Users should be specified by their bare JID (e.g. john@myserver.com)
+plugin.broadcast.all2offline -- true to deliver broadcast messages sent to all@[serviceName].[serverName] to online and offline users. When false or not set only online users get the messages as described below.
+plugin.broadcast.messagePrefix -- Add a prefix for all broadcast messages. Set this to "(broadcast)" to prepend "(broadcast) ".
+Using the Plugin
+
+To send a broadcast message, send a message to all@[serviceName].[serverName] or [group]@[serviceName].[serverName]. For example, if your server is called foo and the default service name is being used, a message to all@broadcast.foo would be broadcast to all users connected to the server. For the group staff, a message to staff@broadcast.foo would be sent to all users in the group staff that are currently online or offline.
+Note: for maximum compatability between group implementations, it's recommended that you use lower-case group names in conjunction with the broadcast plugin.
