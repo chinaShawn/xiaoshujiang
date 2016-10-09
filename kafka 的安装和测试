@@ -9,6 +9,7 @@ grammar_cjkRuby: true
 
 kafka （官网地址：http://kafka.apache.org）是一款分布式消息发布和订阅的系统，具有高性能和高吞吐率。 
 
+![enter description here][1]
  
 
 i. 消息的发布（publish）称作producer，消息的订阅（subscribe）称作consumer，中间的存储阵列称作broker。
@@ -49,7 +50,8 @@ cd kafka_2.8.0-0.8.1
 
 目录： 
 
-点击查看原始大小图片
+![enter description here][2]
+
 /bin 启动和停止命令等。 
 /config 配置文件 
 /libs 类库 
@@ -61,16 +63,19 @@ vi bin/kafka-run-class.sh
 
 
 找到如下行： 
-Sh代码  收藏代码
+
+```bash
 KAFKA_JVM_PERFORMANCE_OPTS="-server -XX:+UseCompressedOops -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+CMSScavengeBeforeRemark -XX:+DisableExplicitGC -Djava.awt.headless=true"  
+```
 
 去除-XX:+UseCompressedOops参数 
 
 3. 启动和停止 
 
 启动Zookeeper server： 
-Shell代码  收藏代码
+```bash
 bin/zookeeper-server-start.sh config/zookeeper.properties &  
+```
 
 &是为了能退出命令行 
 
@@ -126,3 +131,7 @@ Properties代码  收藏代码
 #host.name=localhost  
 
 host名称没有指定，就是127.0.0.1，consumer去broker拿数据就有问题。设置为192.168.1.10，重启服务就好了。
+
+
+  [1]: ./images/1475982916595.jpg "1475982916595.jpg"
+  [2]: ./images/1475982943297.jpg "1475982943297.jpg"
