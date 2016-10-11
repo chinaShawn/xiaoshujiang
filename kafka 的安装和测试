@@ -125,7 +125,8 @@ bin/kafka-console-consumer.sh --zookeeper 192.168.1.10:2181 --topic test --from-
 ```
 
 在producer的console端输入字符串，consumer报Connection refused错误： 
-点击查看原始大小图片
+
+![点击查看原始大小图片][3]
 
 broker, producer和consumer都注册到zookeeper上，producer和consumer的参数明确指定。问题出在broker的配置文件server.properties上： 
 
@@ -138,3 +139,4 @@ host名称没有指定，就是127.0.0.1，consumer去broker拿数据就有问�
 
   [1]: ./images/1475982916595.jpg "1475982916595.jpg"
   [2]: ./images/1475982943297.jpg "1475982943297.jpg"
+  [3]: ./images/1475983174774.jpg "1475983174774.jpg"
