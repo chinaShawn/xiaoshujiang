@@ -88,6 +88,7 @@ bin/kafka-server-start.sh config/server.properties &
 ```bash
 bin/kafka-server-stop.sh  
 ```
+不起作用的话，找出来，干掉它：netstat -tunlp|grep 9092
 
 停止Zookeeper server: 
 ```bash
