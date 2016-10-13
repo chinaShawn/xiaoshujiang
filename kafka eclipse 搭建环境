@@ -182,13 +182,18 @@ public class kafkaConsumer extends Thread{
 接收到: message: 14   
 ```
 本人在运行producter时，并不顺利，eclipse控制台很不争气的报错了，
-      
+   
+   ![enter description here][1]
 
  一度怀疑自己的写法，或者依赖包有问题，后来试着打包，将生成后的jar包，放到虚拟机上运行，一切正常，才确定是因为部署在本机和虚拟机两台机器的原因。         
 
  通过查找资料，大致确定了原因，就是本机和kafka服务端所在虚拟机，不是同一台机器，如果kafka服务端，设置的ip用的localhost，会发生此类问题。
 
  于是修改kafka的server1.properties,  server2.properties,server3.properties
+
+![enter description here][2]
+
+![enter description here][3]
 
  上面是通过maven方式建立工程。
 
@@ -241,7 +246,10 @@ public class ProducerNewApi {
 新的api写法，在import 这里就有显著不同，引入的jar包，也只需要kafka的客户端。
 在虚拟机上开一个consumer接受消息，执行结果如下：
 
-![enter description here][1]
+![enter description here][4]
 
 
-  [1]: ./images/1476239349220.jpg "1476239349220.jpg"
+  [1]: ./images/1476255247065.jpg "1476255247065.jpg"
+  [2]: ./images/1476255263822.jpg "1476255263822.jpg"
+  [3]: ./images/1476255273171.jpg "1476255273171.jpg"
+  [4]: ./images/1476239349220.jpg "1476239349220.jpg"
