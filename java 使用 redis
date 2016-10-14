@@ -95,16 +95,17 @@ grammar_cjkRuby: true
     srandmember(key) ：随机返回名称为key的set的一个元素
     
     8. Hash
-    hset(key, field, value)：向名称为key的hash中添加元素field
-    hget(key, field)：返回名称为key的hash中field对应的value
-    hmget(key, (fields))：返回名称为key的hash中field i对应的value
-    hmset(key, (fields))：向名称为key的hash中添加元素field 
-    hsetnx(key, field，value): 当该字段不存在时，设置hash字段的值， 
-    hincrby(key, field, integer)：将名称为key的hash中field的value增加integer
-    hincrbyfloat(key, field, increment) 由给定的递增量递增哈希字段的浮点值。
-    hexists(key, field)：名称为key的hash中是否存在键为field的域
-    hdel(key, field)：删除名称为key的hash中键为field的域
-    hlen(key)：返回名称为key的hash中元素个数
-    hkeys(key)：返回名称为key的hash中所有键
-    hvals(key)：返回名称为key的hash中所有键对应的value
-    hgetall(key)：返回名称为key的hash中所有的键（field）及其对应的value
+    1. hset(key, field, value)：向名称为key的hash中添加元素field
+    2. hget(key, field)：返回名称为key的hash中field对应的value
+    3. hmget(key, (fields))：返回名称为key的hash中field i对应的value
+    4. hmset(key, (fields))：向名称为key的hash中添加元素field 
+    5. hsetnx(key, field，value): 当该字段不存在时，设置hash字段的值， 
+    6. hincrby(key, field, integer)：将名称为key的hash中field的value增加integer
+    7. hincrbyfloat(key, field, increment) 由给定的递增量递增哈希字段的浮点值。
+    8. hexists(key, field)：名称为key的hash中是否存在键为field的域
+    9. hdel(key, field)：删除名称为key的hash中键为field的域
+    10. hlen(key)：返回名称为key的hash中元素个数
+    11. hkeys(key)：返回名称为key的hash中所有
+    12. hvals(key)：返回名称为key的hash中所有键对应的value
+    13. hgetall(key)：返回名称为key的hash中所有的键（field）及其对应的value
+    14. hscan(key,cursor,[pattern],[count])增量迭代哈希字段及相关值
