@@ -40,20 +40,26 @@ grammar_cjkRuby: true
     flushall：删除所有数据库中的所有key
     
 5. String
-    set(key, value)：给数据库中名称为key的string赋予值value
-    get(key)：返回数据库中名称为key的string的value
-    getset(key, value)：设置指定的在Redis的键的字符串值，并返回其原来的值。
-    mget(key1, key2,…, key N)：返回库中多个string的value
-    setnx(key, value)：添加string，名称为key，值为value,只有当该键不存在时，
-    setex(key, time, value)：向库中添加string，设定过期时间time，键到期时设置值。
-    mset(key N, value N)：批量设置多个string的值
-    msetnx(key N, value N)：如果所有名称为key i的string都不存在
-    incr(key)：名称为key的string增1操作
-    incrby(key, integer)：名称为key的string增加integer
-    decr(key)：名称为key的string减1操作
-    decrby(key, integer)：名称为key的string减少integer
-    append(key, value)：名称为key的string的值附加value
-    substr(key, start, end)：返回名称为key的string的value的子串
+    1. set(key, value)：给数据库中名称为key的string赋予值value
+    2. get(key)：返回数据库中名称为key的string的value
+    3. getset(key, value)：设置指定的在Redis的键的字符串值，并返回其原来的值。
+    4. mget(key1, key2,…, key N)：返回库中多个string的value
+    5. setnx(key, value)：添加string，名称为key，值为value,只有当该键不存在时，
+    6. setex(key, time, value)：向库中添加string，设定过期时间time，键到期时设置值。
+    7. mset(key N, value N)：批量设置多个string的值
+    8. msetnx(key N, value N)：如果所有名称为key i的string都不存在
+    9. incr(key)：名称为key的string增1操作
+   10. incrby(key, integer)：名称为key的string增加integer
+   11. decr(key)：名称为key的string减1操作
+   12. decrby(key, integer)：名称为key的string减少integer
+   13. append(key, value)：名称为key的string的值附加value
+   14. substr(key, start, end)：返回名称为key的string的value的子串
+   15. getrange(key,start,end) 同上
+   16. getbit(key,offset) 返回存在键位值的字符串的偏移
+   17. setrange(key, offset value) 从指定键的偏移处覆盖字符串的一部分
+   18. strlen key 返回键值的长度
+   19. psetex(key,milliseconds,value)设置键的毫秒值和到期时间。
+   20. incrbyfloat(key,increment)设置键的float增长值。
     
  6. List 
     rpush(key, value)：在名称为key的list尾添加一个值为value的元素
