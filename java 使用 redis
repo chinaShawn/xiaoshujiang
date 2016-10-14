@@ -42,10 +42,10 @@ grammar_cjkRuby: true
 5. String
     set(key, value)：给数据库中名称为key的string赋予值value
     get(key)：返回数据库中名称为key的string的value
-    getset(key, value)：给名称为key的string赋予上一次的value
+    getset(key, value)：设置指定的在Redis的键的字符串值，并返回其原来的值。
     mget(key1, key2,…, key N)：返回库中多个string的value
-    setnx(key, value)：添加string，名称为key，值为value
-    setex(key, time, value)：向库中添加string，设定过期时间time
+    setnx(key, value)：添加string，名称为key，值为value,只有当该键不存在时，
+    setex(key, time, value)：向库中添加string，设定过期时间time，键到期时设置。
     mset(key N, value N)：批量设置多个string的值
     msetnx(key N, value N)：如果所有名称为key i的string都不存在
     incr(key)：名称为key的string增1操作
