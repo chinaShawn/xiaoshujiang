@@ -74,11 +74,13 @@ grammar_cjkRuby: true
     10. rpop(key)：返回并删除名称为key的list中的尾元素
     11. blpop(key1, key2,… key N, timeout)：lpop命令的block版本。取出并获取列表中的第一个元素，没有则阻塞，知道有可用为止。
     12. brpop(key1, key2,… key N, timeout)：rpop的block版本。
-    13. rpoplpush(srckey, dstkey)：返回并删除名称为srckey的list的尾元素。删除最后一个元素的列表，将其附加到另一个列表并返回它，
+    13. rpoplpush(srckey, dstkey)：返回并删除名称为srckey的list的尾元素,并将该元素添加到名称为dstkey的list的头部。删除最后一个元素的列表，将其附加到另一个列表并返回它，
     14. brpoplpush(srckey,dstkey):rpoplpush 的bloc版本。
-    15. linsert（key,before/after,pivot,value)在列表中的pivoit元素之后或之前插入一个元素value
+    15. linsert（key,before/after,pivot,value)在列表中的pivoit元素之后或之前插入一个元素
+    16. lpushx(key,value) 当key的list存在时，在前面加上一value
+    17. rpushx(key,value) 当key的list存在时，在后面添加一个value。
 
-　并将该元素添加到名称为dstkey的list的头部
+　
     
   7. Set
     sadd(key, member)：向名称为key的set中添加元素member
