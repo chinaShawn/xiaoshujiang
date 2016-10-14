@@ -42,3 +42,34 @@ sudo service redis restart
 sudo service redis stop  
 sudo redis-server /etc/redis.conf  
 这个时候尝试登录redis，发现可以登上，但是执行具体命令是提示操作不允许
+
+### redis 失效时间
+
+redis 键值对 有效期设置redis中可以使用expire命令设置一个键的生存时间，
+到时间后redis会自动删除它<-----> 类比于javaweb系统临时数据 过期删除功能
+ 
+expire 设置失效时间（单位/秒）
+persist 取消失效时间
+ttl/pttl(单位为 秒/毫秒) 查看键的剩余时间 
+返回三种值 -2(健已经不存在了)  -1(表示永久有效)  大于0的数(还有多少有效时间)
+
+pexpire设置失效时间(单位/毫秒)
+expireat [key] unix时间戳1351858600
+pexpireat [key] unix时间戳(毫秒)1351858700000
+ 
+应用：
+限时的优惠活动： 活动对应数据限时为1小时 则设置为1小时后失效
+网站数据缓存（对于一些需要定时更新的数据）
+    比如排名，间隔10分钟做一次统计的话，那么排名的数据就可以设置 expire
+ 
+网站访客访问频率限制（例如：1分钟最多访问10次）:  用户ip作为健，默认值为1，incr命令，
+ 
+set name zm
+expire name 60 设置name失效时间为60S
+ttl name  查看name健将要失效的剩余生存时间
+
+persist name  取消name的失效时间 
+ttl name  如果返回是-1 则表示已经取消了name的失效时间  -1表示永久有效
+
+ 
+ redis 设置IP单位时间内访问次数， 比如 1分钟内只能让客户IP访问量3次，否则封IP:
