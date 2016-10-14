@@ -99,7 +99,7 @@ grammar_cjkRuby: true
     14. srandmember(key) ：随机返回名称为key的set的一个元素
     15. sscan(key,cursor,paatern,count) 迭代集合中的元素
     
-    8. Hash
+    8. Hash（map)
     1. hset(key, field, value)：向名称为key的hash中添加元素field
     2. hget(key, field)：返回名称为key的hash中field对应的value
     3. hmget(key, (fields))：返回名称为key的hash中field i对应的value
