@@ -62,19 +62,21 @@ grammar_cjkRuby: true
    20. incrbyfloat(key,increment)设置键的float增长值。
     
  6. List 
-    rpush(key, value)：在名称为key的list尾添加一个值为value的元素
-    lpush(key, value)：在名称为key的list头添加一个值为value的 元素
-    llen(key)：返回名称为key的list的长度
-    lrange(key, start, end)：返回名称为key的list中start至end之间的元素
-    ltrim(key, start, end)：截取名称为key的list
-    lindex(key, index)：返回名称为key的list中index位置的元素
-    lset(key, index, value)：给名称为key的list中index位置的元素赋值
-    lrem(key, count, value)：删除count个key的list中值为value的元素
-    lpop(key)：返回并删除名称为key的list中的首元素
-    rpop(key)：返回并删除名称为key的list中的尾元素
-    blpop(key1, key2,… key N, timeout)：lpop命令的block版本。
-    brpop(key1, key2,… key N, timeout)：rpop的block版本。
-    rpoplpush(srckey, dstkey)：返回并删除名称为srckey的list的尾元素，
+    1. rpush(key, value)：在名称为key的list尾添加一个值为value的元素
+    2. lpush(key, value)：在名称为key的list头添加一个值为value的 元素
+    3. llen(key)：返回名称为key的list的长
+    4. lrange(key, start, end)：返回名称为key的list中start至end之间的元素
+    5. ltrim(key, start, end)：截取名称为key的list
+    6. lindex(key, index)：返回名称为key的list中index位置的元素
+    7. lset(key, index, value)：给名称为key的list中index位置的元素赋值
+    8. lrem(key, count, value)：删除count个key的list中值为value的元素
+    9. lpop(key)：返回并删除名称为key的list中的首元素
+    10. rpop(key)：返回并删除名称为key的list中的尾元素
+    11. blpop(key1, key2,… key N, timeout)：lpop命令的block版本。取出并获取列表中的第一个元素，没有则阻塞，知道有可用为止。
+    12. brpop(key1, key2,… key N, timeout)：rpop的block版本。
+    13. rpoplpush(srckey, dstkey)：返回并删除名称为srckey的list的尾元素。删除最后一个元素的列表，将其附加到另一个列表并返回它，
+    14. brpoplpush(srckey,dstkey):rpoplpush 的bloc版本。
+    15. linsert（key,before/after,pivot,value)在列表中的pivoit元素之后或之前插入一个元素value
 
 　并将该元素添加到名称为dstkey的list的头部
     
