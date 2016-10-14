@@ -45,7 +45,7 @@ grammar_cjkRuby: true
     getset(key, value)：设置指定的在Redis的键的字符串值，并返回其原来的值。
     mget(key1, key2,…, key N)：返回库中多个string的value
     setnx(key, value)：添加string，名称为key，值为value,只有当该键不存在时，
-    setex(key, time, value)：向库中添加string，设定过期时间time，键到期时设置。
+    setex(key, time, value)：向库中添加string，设定过期时间time，键到期时设置值。
     mset(key N, value N)：批量设置多个string的值
     msetnx(key N, value N)：如果所有名称为key i的string都不存在
     incr(key)：名称为key的string增1操作
@@ -93,6 +93,7 @@ grammar_cjkRuby: true
     hget(key, field)：返回名称为key的hash中field对应的value
     hmget(key, (fields))：返回名称为key的hash中field i对应的value
     hmset(key, (fields))：向名称为key的hash中添加元素field 
+    hsetnx(key, field，value): 当该字段不存在时，设置hash字段的值， 
     hincrby(key, field, integer)：将名称为key的hash中field的value增加integer
     hexists(key, field)：名称为key的hash中是否存在键为field的域
     hdel(key, field)：删除名称为key的hash中键为field的域
