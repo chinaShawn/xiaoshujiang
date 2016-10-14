@@ -95,6 +95,7 @@ grammar_cjkRuby: true
     hmset(key, (fields))：向名称为key的hash中添加元素field 
     hsetnx(key, field，value): 当该字段不存在时，设置hash字段的值， 
     hincrby(key, field, integer)：将名称为key的hash中field的value增加integer
+    hincrbyfloat(key, field, increment) 由给定的递增量递增哈希字段的浮点值。
     hexists(key, field)：名称为key的hash中是否存在键为field的域
     hdel(key, field)：删除名称为key的hash中键为field的域
     hlen(key)：返回名称为key的hash中元素个数
