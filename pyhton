@@ -1,0 +1,14 @@
+---
+title: pyhton
+tags: python, 语言
+grammar_cjkRuby: true
+---
+
+
+### 安装包分类
+可以通过下面3种途径获取python：
++ web-based installer 是需要通过联网完成安装的
++ executable installer 是可执行文件(`*.exe`)方式安装
++ embeddable zip file 嵌入式版本，可以集成到其它应用中。https://docs.python.org/3.5/using/windows.html#embedded-distribution
+上面3种途径，如果有网络，选择web-based；
+
