@@ -28,3 +28,5 @@ pip install scrapy。如果遇到提示缺少依赖包，请到这里找 http://
 中文版（scrapy 0.25） http://scrapy-chs.readthedocs.io/zh_CN/latest/
 
 英文版（最新版） http://doc.scrapy.org/en/latest/
+
+
