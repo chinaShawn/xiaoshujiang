@@ -29,4 +29,48 @@ pip install scrapy。如果遇到提示缺少依赖包，请到这里找 http://
 
 英文版（最新版） http://doc.scrapy.org/en/latest/
 
+### Eclipse集成Scrapy配置调试
 
+Eclipse中安装PyDev插件后可以使用Eclipse开发Python，下面列出，如何在Eclipse中开发调试scrapy项目。
+下面假设我们已配置完并可用环境，包括：安装Python环境、Eclipse集成PyDev插件、安装scrapy环境。
+（1）新建scrapy项目。选择一个文件夹下，按住Shift并右键【在此处打开命令窗口(w)】，在dos上运行scrapy startproject tutorial,创建一个 tutorial工程，如图。
+
+![enter description here][1]
+创建成功后，目录如下
+![enter description here][2]
+
+（2）Eclipse中新建Python项目。并把（1）中新建的tutorial项目复制到Eclipse中新建的工程下，并新建一个Python启动文件如下图cmdline.py用于启动scrapy项目，其中argv第三个参数为启动爬虫的名字。如下图
+
+```java
+''''' 
+Created on 2015-8-28 
+ 
+@author: songhw 
+'''  
+import scrapy.cmdline  
+  
+if __name__ == '__main__':  
+    scrapy.cmdline.execute(argv=['scrapy','crawl','dmoz'])  
+```
+![enter description here][3]
+
+（3）配置Debug参数。打开Debug Configurations按钮，新建一个PythonRun项目，并配置如下图：
+
+![enter description here][4]
+（4）点击Debug进行调试。
+![enter description here][5]
+
+
+![enter description here][6]
+
+
+
+
+
+
+  [1]: ./images/1476691906227.jpg "1476691906227.jpg"
+  [2]: ./images/1476691920476.jpg "1476691920476.jpg"
+  [3]: ./images/1476691976834.jpg "1476691976834.jpg"
+  [4]: ./images/1476691987320.jpg "1476691987320.jpg"
+  [5]: ./images/1476691997099.jpg "1476691997099.jpg"
+  [6]: ./images/1476692009656.jpg "1476692009656.jpg"
