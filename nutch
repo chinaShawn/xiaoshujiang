@@ -36,6 +36,7 @@ grammar_cjkRuby: true
 
 
 9. 如下图，右击run as>run configurations，main class选择src/java/org/jivesoftware/openfire/starter/ServerStarter.java，在出现的对话框中选择java application>Arguments，在VM Arguments中输入-DopenfireHome="${workspace_loc:openfire}/target/openfire"  ，注意这里的openfire相当于我们的项目名，大小写要注意。再选择Classpth>User Entries，然后点击Advanced>Add Folders,选取项目下的resource文件和src/i18n文件添加进来
+
 ![加入文件][7]
 
 ![加入文件2][8]
@@ -43,6 +44,7 @@ grammar_cjkRuby: true
 ![设置VM参数][9]
 
 至此，项目建构完毕，运行ServerStarter.java，会出现以下提示。
+
 ![最终][10]
 
 
