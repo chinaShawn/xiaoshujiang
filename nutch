@@ -40,9 +40,9 @@ grammar_cjkRuby: true
 
 ![enter description here][7]
 
-![加入文件2][8]
+![enter description here][8]
 
-![设置VM参数][9]
+![enter description here][9]
 
 至此，项目建构完毕，运行ServerStarter.java，会出现以下提示。
 
@@ -167,10 +167,10 @@ public class HelloWorldPlugin implements Plugin {
   [3]: ./images/1477461216731.jpg "1477461216731.jpg"
   [4]: ./images/1477461225587.jpg "1477461225587.jpg"
   [5]: ./images/1477461302862.jpg "1477461302862.jpg"
-  [6]: ./images/1477454650216.jpg "1477454650216.jpg"
-  [7]: ./images/1477461246314.jpg "1477461246314.jpg"
-  [8]: ./images/1477454999959.jpg "1477454999959.jpg"
-  [9]: ./images/1477455007951.jpg "1477455007951.jpg"
+  [6]: ./images/1477461312412.jpg "1477461312412.jpg"
+  [7]: ./images/1477461327568.jpg "1477461327568.jpg"
+  [8]: ./images/1477461334873.jpg "1477461334873.jpg"
+  [9]: ./images/1477461343076.jpg "1477461343076.jpg"
   [10]: ./images/1477455026064.jpg "1477455026064.jpg"
   [11]: ./images/1477460793814.jpg "1477460793814.jpg"
   [12]: ./images/1477460815584.jpg "1477460815584.jpg"
