@@ -38,7 +38,7 @@ grammar_cjkRuby: true
 
 9. 如下图，右击run as>run configurations，main class选择src/java/org/jivesoftware/openfire/starter/ServerStarter.java，在出现的对话框中选择java application>Arguments，在VM Arguments中输入-DopenfireHome="${workspace_loc:openfire}/target/openfire"  ，注意这里的openfire相当于我们的项目名，大小写要注意。再选择Classpth>User Entries，然后点击Advanced>Add Folders,选取项目下的resource文件和src/i18n文件添加进来
 
-![加入文件][7]
+![enter description here][7]
 
 ![加入文件2][8]
 
@@ -166,9 +166,9 @@ public class HelloWorldPlugin implements Plugin {
   [2]: ./images/1477461206367.jpg "1477461206367.jpg"
   [3]: ./images/1477461216731.jpg "1477461216731.jpg"
   [4]: ./images/1477461225587.jpg "1477461225587.jpg"
-  [5]: ./images/1477461235013.jpg "1477461235013.jpg"
+  [5]: ./images/1477461287301.jpg "1477461287301.jpg"
   [6]: ./images/1477454650216.jpg "1477454650216.jpg"
-  [7]: ./images/1477454992895.jpg "1477454992895.jpg"
+  [7]: ./images/1477461246314.jpg "1477461246314.jpg"
   [8]: ./images/1477454999959.jpg "1477454999959.jpg"
   [9]: ./images/1477455007951.jpg "1477455007951.jpg"
   [10]: ./images/1477455026064.jpg "1477455026064.jpg"
