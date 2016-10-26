@@ -27,7 +27,7 @@ grammar_cjkRuby: true
 
 > 效果如下
 
-![效果1][5]
+![enter description here][5]
 
 5.复制src/i18n/openfire_i18n_en.properties和src/resources/jar/admin-sidebar.xml两个文件，到项目下的bin目录,如果没有的话，新建一个，再把文件添加进去。
 
@@ -166,7 +166,7 @@ public class HelloWorldPlugin implements Plugin {
   [2]: ./images/1477461206367.jpg "1477461206367.jpg"
   [3]: ./images/1477461216731.jpg "1477461216731.jpg"
   [4]: ./images/1477461225587.jpg "1477461225587.jpg"
-  [5]: ./images/1477454581255.jpg "1477454581255.jpg"
+  [5]: ./images/1477461235013.jpg "1477461235013.jpg"
   [6]: ./images/1477454650216.jpg "1477454650216.jpg"
   [7]: ./images/1477454992895.jpg "1477454992895.jpg"
   [8]: ./images/1477454999959.jpg "1477454999959.jpg"
