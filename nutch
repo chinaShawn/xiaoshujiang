@@ -75,7 +75,7 @@ grammar_cjkRuby: true
 
 ![enter description here][16]
 
-现在包建好了，我们在这个包中建一个java文件，名为：HelloWorldPlugin，我就不截图，这个学过java的人就应该知道，内容如下：
+ 现在包建好了，我们在这个包中建一个java文件，名为：HelloWorldPlugin，我就不截图，这个学过java的人就应该知道，内容如下：
 
 ```java
 package com.helloworld;  
@@ -109,6 +109,7 @@ public class HelloWorldPlugin implements Plugin {
 ```
 
 内容很简单，就是在openfire启动和关闭时，在控制台打印出一条消息。保存好了，我们的java源文件就写好了，现在我们该来写plugin.xml文件了，内容如下：
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>  
   
