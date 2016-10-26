@@ -14,7 +14,7 @@ grammar_cjkRuby: true
 
 2. 将openfire源码中openfire_src下的所有文件复制到此项目中，效果如下
 
-![复制][2]
+![enter description here][2]
 
 3. 项目有错误是因为jar包没有加进来，右键点击项目选择Properties，添加build/lib下所有的jar包
 
@@ -163,7 +163,7 @@ public class HelloWorldPlugin implements Plugin {
 
 
   [1]: ./images/1477461188797.jpg "1477461188797.jpg"
-  [2]: ./images/1477454319763.jpg "1477454319763.jpg"
+  [2]: ./images/1477461206367.jpg "1477461206367.jpg"
   [3]: ./images/1477454344422.jpg "1477454344422.jpg"
   [4]: ./images/1477454449207.jpg "1477454449207.jpg"
   [5]: ./images/1477454581255.jpg "1477454581255.jpg"
