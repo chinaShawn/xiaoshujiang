@@ -9,6 +9,7 @@ grammar_cjkRuby: true
 
 1. 在Eclipse中创建名为openfire的java项目
 
+
 ![enter description here][1]
 
 2. 将openfire源码中openfire_src下的所有文件复制到此项目中，效果如下
