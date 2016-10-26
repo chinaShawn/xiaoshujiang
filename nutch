@@ -46,7 +46,7 @@ grammar_cjkRuby: true
 
 至此，项目建构完毕，运行ServerStarter.java，会出现以下提示。
 
-![最终][10]
+![enter description here][10]
 
 
 ## 插件开发
@@ -171,7 +171,7 @@ public class HelloWorldPlugin implements Plugin {
   [7]: ./images/1477461327568.jpg "1477461327568.jpg"
   [8]: ./images/1477461334873.jpg "1477461334873.jpg"
   [9]: ./images/1477461343076.jpg "1477461343076.jpg"
-  [10]: ./images/1477455026064.jpg "1477455026064.jpg"
+  [10]: ./images/1477461351008.jpg "1477461351008.jpg"
   [11]: ./images/1477460793814.jpg "1477460793814.jpg"
   [12]: ./images/1477460815584.jpg "1477460815584.jpg"
   [13]: ./images/1477460835345.jpg "1477460835345.jpg"
