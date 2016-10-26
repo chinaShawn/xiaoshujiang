@@ -1,8 +1,52 @@
 ---
-title: nutch
+title: openfire 开发插件
 tags: 新建,模板,小书匠
 grammar_cjkRuby: true
 ---
 
 
-欢迎使用 **{小书匠}(xiaoshujiang)编辑器**，您可以通过==设置==里的修改模板来改变新建文章的内容。
+## 开发环境搭建
+
+1. 在Eclipse中创建名为openfire的java项目
+
+![enter description here][1]
+
+2. 将openfire源码中openfire_src下的所有文件复制到此项目中，效果如下
+
+![复制][2]
+
+3. 项目有错误是因为jar包没有加进来，右键点击项目选择Properties，添加build/lib下所有的jar包
+
+
+![enter description here][3]
+
+4. 为了方便编辑，我们要把各个插件的源代码抽出来，在Properties文件夹中选择Source，Add Folders，把src/java和plugins下面的所有插件前边打上勾。
+
+![enter description here][4]
+
+> 效果如下
+
+![效果1][5]
+
+5.复制src/i18n/openfire_i18n_en.properties和src/resources/jar/admin-sidebar.xml两个文件，到项目下的bin目录,如果没有的话，新建一个，再把文件添加进去。
+
+![enter description here][6]
+
+然后，我们用ant来编译整个项目，选择项目下的build/build.xml文件，运行，若是出现BUILD SUCCESSFUL则编译成功，不行就多来几遍。
+下面建立项目builder，选择src/java/org/jivesoftware/openfire/starter/ServerStarter.java，右击run as>run configurations，在出现的对话框中选择java application>Arguments，在VM Arguments中输入-DopenfireHome="${workspace_loc:openfire}/target/openfire"  ，注意这里的openfire相当于我们的项目名，大小写要注意。再选择Classpth>User Entries，然后点击Advanced>Add Folders,选取项目下的resource文件和src/i18n文件添加进来
+加入文件
+
+加入文件2
+
+设置VM参数
+
+至此，项目建构完毕，运行ServerStarter.java，会出现以下提示。
+最终
+
+
+  [1]: ./images/1477454290960.jpg "1477454290960.jpg"
+  [2]: ./images/1477454319763.jpg "1477454319763.jpg"
+  [3]: ./images/1477454344422.jpg "1477454344422.jpg"
+  [4]: ./images/1477454449207.jpg "1477454449207.jpg"
+  [5]: ./images/1477454581255.jpg "1477454581255.jpg"
+  [6]: ./images/1477454650216.jpg "1477454650216.jpg"
