@@ -32,8 +32,10 @@ grammar_cjkRuby: true
 
 ![enter description here][6]
 
-然后，我们用ant来编译整个项目，选择项目下的build/build.xml文件，运行，若是出现BUILD SUCCESSFUL则编译成功，不行就多来几遍。
-下面建立项目builder，选择src/java/org/jivesoftware/openfire/starter/ServerStarter.java，右击run as>run configurations，在出现的对话框中选择java application>Arguments，在VM Arguments中输入-DopenfireHome="${workspace_loc:openfire}/target/openfire"  ，注意这里的openfire相当于我们的项目名，大小写要注意。再选择Classpth>User Entries，然后点击Advanced>Add Folders,选取项目下的resource文件和src/i18n文件添加进来
+6. 我们用ant来编译整个项目，选择项目下的build/build.xml文件，运行，若是出现BUILD SUCCESSFUL则编译成功，不行就多来几遍。这一步是为了生成后面的target/openfire文件。
+
+
+9. 如下图，右击run as>run configurations，main class选择src/java/org/jivesoftware/openfire/starter/ServerStarter.java，在出现的对话框中选择java application>Arguments，在VM Arguments中输入-DopenfireHome="${workspace_loc:openfire}/target/openfire"  ，注意这里的openfire相当于我们的项目名，大小写要注意。再选择Classpth>User Entries，然后点击Advanced>Add Folders,选取项目下的resource文件和src/i18n文件添加进来
 加入文件
 
 加入文件2
