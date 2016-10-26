@@ -48,6 +48,119 @@ grammar_cjkRuby: true
 ![最终][10]
 
 
+## 插件开发
+
+1. 在\openfire_src\src\plugins目录下新建一个helloWorld的文件夹，然后在helloWorld目录下新建一个src的文件夹，放页面和源文件，再新建一个lib目录放第三方的jar包，然后在src文件夹下面新建web，Java两个文件夹，web下面放置页面，在这个案例没有用到，可以不建，java文件夹下面放置java源文件，现在目录结构如下：
+
+![enter description here][11]
+
+2. changelog.html、plugin.xml、readme.html这三个文件分别是你的插件修改日志文件，插件文件和自述文件，其中plugin.xml这个文件很重要，后面我还要解释，先空着，logo_large.gif和logo_small.gif是插件的logo文件，我随便拷了两个。各位，做好上面的步骤以后，注意了，跟openfire自带插件的目录结构不一样，细心的朋友可能注意到了，我新建的src下面有个java目录，而openfire自带插件则没有，而是跑到上面去了，如下：
+
+![enter description here][12]
+
+不要着急，做完这一步，我们的插件就跟openfire自带插件一样了，步骤截图如下：
+
+![enter description here][13]
+
+这时，我们看到，src目录下的java目录不见了，而在上面的源码目录有了我们自己插件了，截图如下：
+
+![enter description here][14]
+
+好了，我们先建一个包，如下：
+
+![enter description here][15]
+
+输入包名：
+
+![enter description here][16]
+
+现在包建好了，我们在这个包中建一个java文件，名为：HelloWorldPlugin，我就不截图，这个学过java的人就应该知道，内容如下：
+
+```java
+package com.helloworld;  
+  
+import java.io.File;  
+  
+import org.jivesoftware.openfire.XMPPServer;  
+import org.jivesoftware.openfire.container.Plugin;  
+import org.jivesoftware.openfire.container.PluginManager;  
+  
+public class HelloWorldPlugin implements Plugin {  
+    private XMPPServer server;  
+  
+    public HelloWorldPlugin() {  
+  
+    }  
+  
+    @Override  
+    public void initializePlugin(PluginManager manager, File pluginDirectory) {  
+        server = XMPPServer.getInstance();  
+        System.out.println("HelloWorldPlugin----start");  
+        System.out.println(server.getServerInfo());  
+    }  
+  
+    @Override  
+    public void destroyPlugin() {  
+        System.out.println("HelloWorldPlugin----destroy");  
+    }  
+  
+}  
+```
+
+内容很简单，就是在openfire启动和关闭时，在控制台打印出一条消息。保存好了，我们的java源文件就写好了，现在我们该来写plugin.xml文件了，内容如下：
+```xml
+<?xml version="1.0" encoding="UTF-8"?>  
+  
+<plugin>  
+    <class>com.helloworld.HelloWorldPlugin</class>  
+    <name>helloWorld</name>  
+    <description>First Openfire Custom Plugin.</description>  
+    <author>xieyuan</author>  
+    <version>1.0.0</version>  
+    <date>14/07/2014</date>  
+    <minServerVersion>3.9.0</minServerVersion>  
+      
+    <adminconsole>  
+    </adminconsole>  
+  
+</plugin>
+```
+
+以及注意上面的class的配置，那个配置是最为重要的，配置的是插件的全路径；name是插件的名称，安装后的插件名称；author是插件作者；adminconsole是配置插件关联的页面的；这里不需要。
+  
+编译插件
+
+展开\openfire_src\build目录，我们发现有一个build.properties.template文件，我们将其重命名为：build.properties，在这个build.properties中加上一行：plugin=helloWorld，截图如下：
+
+![enter description here][17]
+
+使用ant编译插件，截图操作如下：
+
+![enter description here][18]
+
+在弹出的target中选择build one plugin，点击Apply，Run：
+
+![enter description here][19]
+
+之后，我们在控制台上看到：
+
+![enter description here][20]
+
+构建成功，我们在相应的目录下，可以看到，生成的插件包：helloWorld.jar
+
+![enter description here][21]
+
+现在我们来运行我们的插件，看在控制台上能不能打印相应的信息，启动openfire，我们看到在控制台上一句：
+
+![enter description here][22]
+
+好了，大功告成，网上有很多人问，怎么调试插件，这不很简单，直接debug openfire不就行了：
+
+![enter description here][23]
+
+终于完成，希望对大家有所裨益！！！睡觉
+
+
   [1]: ./images/1477454290960.jpg "1477454290960.jpg"
   [2]: ./images/1477454319763.jpg "1477454319763.jpg"
   [3]: ./images/1477454344422.jpg "1477454344422.jpg"
@@ -58,3 +171,16 @@ grammar_cjkRuby: true
   [8]: ./images/1477454999959.jpg "1477454999959.jpg"
   [9]: ./images/1477455007951.jpg "1477455007951.jpg"
   [10]: ./images/1477455026064.jpg "1477455026064.jpg"
+  [11]: ./images/1477460793814.jpg "1477460793814.jpg"
+  [12]: ./images/1477460815584.jpg "1477460815584.jpg"
+  [13]: ./images/1477460835345.jpg "1477460835345.jpg"
+  [14]: ./images/1477460855735.jpg "1477460855735.jpg"
+  [15]: ./images/1477460872747.jpg "1477460872747.jpg"
+  [16]: ./images/1477460888260.jpg "1477460888260.jpg"
+  [17]: ./images/1477461008085.jpg "1477461008085.jpg"
+  [18]: ./images/1477461015899.jpg "1477461015899.jpg"
+  [19]: ./images/1477461023158.jpg "1477461023158.jpg"
+  [20]: ./images/1477461030461.jpg "1477461030461.jpg"
+  [21]: ./images/1477461036569.jpg "1477461036569.jpg"
+  [22]: ./images/1477461045618.jpg "1477461045618.jpg"
+  [23]: ./images/1477461055034.jpg "1477461055034.jpg"
