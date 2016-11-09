@@ -162,6 +162,11 @@ public class HelloWorldPlugin implements Plugin {
 
 终于完成，希望对大家有所裨益！！！睡觉
 
+`> 注意：在还有c3p0这种配置文件和hibernate配置文件的情况，打包为jar的时候需要手动放到xx.jar里面的xx-lib.jar 的更目录下。
+
+
+![enter description here][24]
+
 
   [1]: ./images/1477461188797.jpg "1477461188797.jpg"
   [2]: ./images/1477461206367.jpg "1477461206367.jpg"
@@ -186,3 +191,4 @@ public class HelloWorldPlugin implements Plugin {
   [21]: ./images/1477461036569.jpg "1477461036569.jpg"
   [22]: ./images/1477461045618.jpg "1477461045618.jpg"
   [23]: ./images/1477461055034.jpg "1477461055034.jpg"
+  [24]: ./images/1478653783200.jpg "1478653783200.jpg"
