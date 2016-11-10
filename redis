@@ -74,7 +74,7 @@ ttl name  如果返回是-1 则表示已经取消了name的失效时间  -1表�
  
  redis 设置IP单位时间内访问次数， 比如 1分钟内只能让客户IP访问量3次，否则封IP:
  
- ### 客户端连接的方式
+ ### 客户端连接的方式-a
  storm的bolt中使用Redis有两种方式，1）在prepare中初始化jedis链接，在execute方法中，执行提交方法。 2）在prepare中初始化连接池，每次execute中从池中取jedis，然后再提交数据，然后归还连接。
 
       用池好处：万一发生了连接异常，catch捕获调fail，下一条数据执行execute照常进行，从池里取连接不会受影响。另外一个好处，就是如果一个excutetor对应多个task，可以在executor里边建立数据连接池，每个task都从这个池里取连接，避免同时建立多个连接比较慢。
