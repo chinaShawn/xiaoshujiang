@@ -274,7 +274,7 @@ public static void main(String[] args) {
 }  
 ```
 
-   对于JDK 的Proxy,有以下几点：
+对于JDK 的Proxy,有以下几点：
     1）Interface：对于JDK proxy，业务类是需要一个Interface的，这也是一个缺陷
 
     2）Proxy，Proxy 类是动态产生的，这个类在调用Proxy.newProxyInstance(targetCls.getClassLoader, targetCls.getInterface,InvocationHander)之后，会产生一个Proxy类的实例。实际上这个Proxy类也是存在的，不仅仅是类的实例。这个Proxy类可以保存到硬盘上。
