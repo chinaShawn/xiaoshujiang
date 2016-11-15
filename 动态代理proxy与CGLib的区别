@@ -187,8 +187,10 @@ AppClassLoader：(默认)加载classpath指定的类，是最常使用的是一�
 
 
 当系统有了一个代理对象之后，对原方法的调用会首先被分派到一个调用处理器（Invocation Handler).InvocationHandler 接口如下图所示：
+ 
+ 
+ ![enter description here][1]
 
-   ![enter description here][1]
 
 接口：
 ```java
@@ -317,7 +319,7 @@ public class BookFacadeImpl1 {
 
   代理：
    
-````java
+```java
 package net.battier.proxy;  
   
 import java.lang.reflect.Method;  
