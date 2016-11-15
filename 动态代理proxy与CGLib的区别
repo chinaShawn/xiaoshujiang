@@ -200,7 +200,7 @@ public interface BookFacade {
 }  
 ```
 
-  实际业务类：
+ 实际业务类：
  
 ```java
 package com.mahoutchina.pattern.proxy.dynamicproxy;  
@@ -218,9 +218,10 @@ public class BookFacadeImpl implements BookFacade {
           
     }  
 }  
+```
 
-  动态代理类：
-    
+动态代理类：    
+
 ```java
 package com.mahoutchina.pattern.proxy.dynamicproxy;  
   
@@ -257,7 +258,6 @@ public class BookFacadeProxy implements InvocationHandler {
 }  
 ```
 
-
 测试类：
    
 ```java 
@@ -287,19 +287,19 @@ public static void main(String[] args) {
 
 ###  CGLib 简介
 JDK的动态代理机制只能代理实现了接口的类，而不能实现接口的类就不能实现JDK的动态代理，cglib是针对类来实现代理的，他的原理是对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。 
-示例 
+
+> 示例 
 
    业务类：
-
-[java] view plain copy
+```java
 package net.battier.dao;  
   
 public interface BookFacade {  
     public void addBook();  
 }  
-   
+   ```
 
-[java] view plain copy
+```java
 package net.battier.dao.impl;  
   
 /** 
@@ -313,10 +313,10 @@ public class BookFacadeImpl1 {
         System.out.println("增加图书的普通方法...");  
     }  
 }  
+```
   代理：
    
-
-[java] view plain copy
+````java
 package net.battier.proxy;  
   
 import java.lang.reflect.Method;  
@@ -363,10 +363,10 @@ public class BookFacadeCglib implements MethodInterceptor {
     }  
   
 }  
+```
   测试；
    
-
-[java] view plain copy
+```java
 package net.battier.test;  
   
 import net.battier.dao.impl.BookFacadeImpl1;  
@@ -380,6 +380,6 @@ public class TestCglib {
         bookCglib.addBook();  
     }  
 }  
-
+```
 
   [1]: ./images/1479191085309.jpg "1479191085309.jpg"
