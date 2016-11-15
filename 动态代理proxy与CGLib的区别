@@ -17,38 +17,34 @@ grammar_cjkRuby: true
 
 因而，我们可以把代理模式的适用，总结为：代理类主要负责为委托类预处理消息、过滤消息、把消息转发给委托类，以及事后处理消息等
 
-  代理模式的用途，可以分为如下几种：
+  #### 代理模式的用途，可以分为如下几种：
 
-    1）远程代理（Remote ）：为远程对象的invoke提供代理，典型的例子如RMI或者EJB，都会在本地生成一个远程对象的stub。
+  1. 远程代理（Remote ）：为远程对象的invoke提供代理，典型的例子如RMI或者EJB，都会在本地生成一个远程对象的stub。
 
-    2）虚拟代理（Virtual）：如果需要创建一个资源消耗大的对象，则可以首先使用一个代理，使这个对象在需要时才真正创建。
+  2. 虚拟代理（Virtual）：如果需要创建一个资源消耗大的对象，则可以首先使用一个代理，使这个对象在需要时才真正创建。
 
-    3）Copy-On-Write 代理：把复制延迟到客户端需要时才采取行动
+  3. Copy-On-Write 代理：把复制延迟到客户端需要时才采取行动
 
-    4）保护（Protect）
+  4. 保护（Protect）
 
-    5）Cache代理
+   5. Cache代理
 
-   2.静态代理与动态代理
+   6. 静态代理与动态代理
 
-代理分为静态代理和动态代理
-
-   按照代理创建的时期，可以分为动态代理和静态代理：
-
- 静态代理：由程序员或者自动生成工具生成代理类，然后进行代理类的编译和运行。在代理类、委托类运行之前，代理类已经以.class的格式存在。
-
- 静态代理：在程序运行时，由反射机制动态创建而成。
+#### 代理分为静态代理和动态代理
 
 
- 3.静态代理实例
+ 1. 静态代理：由程序员或者自动生成工具生成代理类，然后进行代理类的编译和运行。在代理类、委托类运行之前，代理类已经以.class的格式存在。
 
-    静态代理实例：
+ 2. 静态代理：在程序运行时，由反射机制动态创建而成。
 
-     首先需要一个接口：
 
-      
 
-[java] view plain copy
+> 静态代理实例
+
+  首先需要一个接口：     
+
+```java
 package net.battier.dao;  
   
 /** 
@@ -65,12 +61,11 @@ public interface Count {
     public void updateCount();  
   
 }  
-  然后是委托类，也就是接口的真正实现类，内涵主要的业务逻辑：
+```
+然后是委托类，也就是接口的真正实现类，内涵主要的业务逻辑：
    
-
-[java] view plain copy
+```java
 package net.battier.dao.impl;  
-  
 import net.battier.dao.Count;  
   
 /** 
@@ -94,11 +89,11 @@ public class CountImpl implements Count {
     }  
   
 }  
+```
    最后是代理类：
-        
-
-[java] view plain copy
-CountProxy.java  
+   
+   
+```java       
 package net.battier.dao.impl;  
   
 import net.battier.dao.Count;  
@@ -139,11 +134,10 @@ public class CountProxy implements Count {
     }  
   
 }  
+```
+
 运行：
-
-   
-
-[java] view plain copy
+```java
 package com.mahoutchina.pattern.proxy;  
   
 public class CountTest {  
@@ -160,24 +154,22 @@ public class CountTest {
     }  
   
 }  
-  从静态代理中可以看出：
-    1.接口：代理类需要实现一个接口，这个接口和委托类的接口是一样的，这样proxy才能和委托类行为表现一致
+```
 
-    2. 方法（Method）:由于接口限制，proxy类中也要有interface中的各个方法，这就造成了代码重复
+  从静态代理中可以看出：
+ 
+1.接口：代理类需要实现一个接口，这个接口和委托类的接口是一样的，这样proxy才能和委托类行为表现一致 
+2. 方法（Method）:由于接口限制，proxy类中也要有interface中的各个方法，这就造成了代码重复
 
    
+> JDK动态代理实例
 
-4.JDK动态代理实例
-    动态代理类克服了proxy需要继承专一的interface接口，并且要实现相应的method的缺陷。从JDK 1.3以来，Java 语言通过java.lang.reflex库提供的三个类直接支持代理：
+动态代理类克服了proxy需要继承专一的interface接口，并且要实现相应的method的缺陷。从JDK 1.3以来，Java 语言通过java.lang.reflex库提供的三个类直接支持代理： java.lang.reflect.Proxy,java.lang.reflect.InvocationHandler 和Method.
 
-     java.lang.reflect.Proxy,java.lang.reflect.InvocationHandler 和Method.
-
-    Proxy类在运行时动态创建代理对象，这也是dynamic proxy的由来，下面是类图，其中最重要的是newProxyInstance,这个方法中，指明了将要代理的类的加载器，业务类接口，以及代理类要执行动作的调用处理器（InvokeHandler)
+Proxy类在运行时动态创建代理对象，这也是dynamic proxy的由来，下面是类图，其中最重要的是newProxyInstance,这个方法中，指明了将要代理的类的加载器，业务类接口，以及代理类要执行动作的调用处理器（InvokeHandler)
 
 
-
- 
-
+```java
 public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, 
 InvocationHandler h) 
                                throws IllegalArgumentException 
@@ -185,32 +177,32 @@ InvocationHandler h)
 ClassLoader loader：类加载器 
 Class<?>[] interfaces：得到全部的接口 
 InvocationHandler h：得到InvocationHandler接口的子类实例 
+```
 
-Ps:类加载器 
+####  类加载器 
 在Proxy类中的newProxyInstance（）方法中需要一个ClassLoader类的实例，ClassLoader实际上对应的是类加载器，在Java中主要有一下三种类加载器; 
 Booststrap ClassLoader：此加载器采用C++编写，一般开发中是看不到的； 
 Extendsion ClassLoader：用来进行扩展类的加载，一般对应的是jre\lib\ext目录中的类; 
 AppClassLoader：(默认)加载classpath指定的类，是最常使用的是一种加载器。 
 
-   当系统有了一个代理对象之后，对原方法的调用会首先被分派到一个调用处理器（Invocation Handler).InvocationHandler 接口如下图所示：
 
-    
+当系统有了一个代理对象之后，对原方法的调用会首先被分派到一个调用处理器（Invocation Handler).InvocationHandler 接口如下图所示：
 
-  代码：
+   ![enter description here][1]
 
-    接口：
-
-[java] view plain copy
+接口：
+```java
 package com.mahoutchina.pattern.proxy.dynamicproxy;  
   
 public interface BookFacade {  
     public void addBook();  
     public void deleteBook();  
 }  
+```
+
   实际业务类：
  
-
-[java] view plain copy
+```java
 package com.mahoutchina.pattern.proxy.dynamicproxy;  
   
 public class BookFacadeImpl implements BookFacade {  
@@ -225,13 +217,11 @@ public class BookFacadeImpl implements BookFacade {
         System.out.println("delete book logic is running。。。");  
           
     }  
-      
-  
 }  
+
   动态代理类：
     
-
-[java] view plain copy
+```java
 package com.mahoutchina.pattern.proxy.dynamicproxy;  
   
 import java.lang.reflect.InvocationHandler;  
@@ -265,10 +255,10 @@ public class BookFacadeProxy implements InvocationHandler {
     }  
   
 }  
-  测试类：
+```
+ 测试类：
    
-
-[java] view plain copy
+```java 
 package com.mahoutchina.pattern.proxy.dynamicproxy;  
   
 ublic class TestProxy {  
@@ -282,6 +272,8 @@ public static void main(String[] args) {
     bookProxy.addBook();  
     bookProxy.deleteBook();  
 }  
+```
+
    对于JDK 的Proxy,有以下几点：
     1）Interface：对于JDK proxy，业务类是需要一个Interface的，这也是一个缺陷
 
@@ -388,3 +380,5 @@ public class TestCglib {
     }  
 }  
 
+
+  [1]: ./images/1479191085309.jpg "1479191085309.jpg"
