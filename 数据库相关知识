@@ -7,6 +7,7 @@ grammar_cjkRuby: true
 
 
 ### @JoinColumn与@Column
+
  @JoinColumn与@Column标记一样，是用于注释表中的字段的。它的属性与@Column属性有很多相同之处，这里就不详细讲述。请读者参阅5.2.2小节中有关@Column属性的部分。 
 
 l         @JoinColumn与@Column相区别的是：@JoinColumn注释的是保存表与表之间关系的字段，它要标注在实体属性上。而@Column标注的是表中不包含表关系的字段。 
