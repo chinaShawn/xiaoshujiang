@@ -107,3 +107,6 @@ INSERT INTO a (field1,field2) SELECT * FROM(SELECT b.f1,c.f2 FROM b JOIN c) AS t
       其中f1是表b的字段，f2是表c的字段，通过JOIN查询就将分别来自表b和表c的字段进行了组合，然后再通过SELECT嵌套查询插入到表a中，这样就满足了这个场景了，如果需要不止2个表，那么可以多个JOIN的形式来组合字段。
 
 
+update `251-350结果` set yxdm=SUBSTR(yxmc,1,4)
+
+
