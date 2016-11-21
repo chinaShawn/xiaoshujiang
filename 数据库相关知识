@@ -69,3 +69,17 @@ public AddressEO getAddress() {
 属性referencedColumnName标注的是所关联表中的字段名，若不指定则使用的所关联表的主键字段名作为外键。 
 
 l         JoinColumn标记不仅能够与@OneToOne使用，也可以@ManyToOne或@ManyToMany标记同时使用，它们所表示的含义不同，这些内容将在下文详细讲述。
+
+
+
+
+去除掉mysql 摸个字段的所有数字
+update `tdf_3_li` set 院校名称=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(院校名称,'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','')
+
+
+
+
+update `tdf_3_li` set 院校名称=REPLACE(院校名称,'（）','')
+
+
+
