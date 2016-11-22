@@ -98,6 +98,9 @@ update 表名 set 字段名=replace(convert(字段名 using ascii),'?','')
 
 INSERT INTO db1_name (field1,field2) SELECT field1,field2 FROM db2_name
  
+ 
+ 
+ 
 
       上面的语句比较适合两个表的数据互插，如果多个表就不适应了。对于多个表，可以先将需要查询的字段JOIN起来，然后组成一个视图后再SELECT FROM就可以了：
 
@@ -110,3 +113,6 @@ INSERT INTO a (field1,field2) SELECT * FROM(SELECT b.f1,c.f2 FROM b JOIN c) AS t
 update `251-350结果` set yxdm=SUBSTR(yxmc,1,4)
 
 
+
+
+update `major_enroll_distinguish_2014` set zydm=CONCAT("0",zydm) where LENGTH(zydm)=1;
