@@ -116,3 +116,7 @@ update `251-350结果` set yxdm=SUBSTR(yxmc,1,4)
 
 
 update `major_enroll_distinguish_2014` set zydm=CONCAT("0",zydm) where LENGTH(zydm)=1;
+
+
+update `招生院校` set `院校名称`=left(`院校名称`,LOCATE("(成人高校招收普通高考生)",`院校名称`)-1) WHERE `院校名称` like "%(成人高校招收普通高考生)%";
+
