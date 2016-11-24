@@ -120,3 +120,6 @@ update `major_enroll_distinguish_2014` set zydm=CONCAT("0",zydm) where LENGTH(zy
 
 update `招生院校` set `院校名称`=left(`院校名称`,LOCATE("(成人高校招收普通高考生)",`院校名称`)-1) WHERE `院校名称` like "%(成人高校招收普通高考生)%";
 
+update `2013—2015年河南本科三批平行志愿投档最低分（文科）` t set zdpw=(select b.`2013年考生人数` from `2013—2015年河南分数段人数统计表（文科)` b where b.`分数`=t.score) where  `年份`="2013";
+
+
