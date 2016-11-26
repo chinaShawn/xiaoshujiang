@@ -79,6 +79,7 @@ update `tdf_3_li` set 院校名称=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLA
 
 
 
+
 update `tdf_3_li` set 院校名称=REPLACE(院校名称,'（）','')
 
 
