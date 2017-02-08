@@ -1,7 +1,5 @@
- [置顶] java的Future和FutureTask
-标签： java Future FutureTa
-2013-12-02 17:14 8792人阅读 评论(1) 收藏 举报
- 分类： Java开发（67）   Android开发（291）  
+java的Future和FutureTask
+
 public interface Future<V> Future 表示异步计算的结果。
 Future有个get方法而获取结果只有在计算完成时获取，否则会一直阻塞直到任务转入完成状态，然后会返回结果或者抛出异常。 
 
