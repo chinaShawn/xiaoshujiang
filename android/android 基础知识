@@ -1,0 +1,28 @@
+---
+title: android 基础知识
+tags: android, 基础知识
+grammar_cjkRuby: true
+---
+
+
+　描述4 种 activity 的启动模式
+　　1）standard ：系统的默认模式，一次跳转即会生成一个新的实例。假设有一个activity命名为MainActivity，执行语句：
+　　startActivity(new Intent(MainActivity.this, MainActivity.class))后，MainActivity将跳转到另外一个MainActivity，也就是现在的Task栈里面有MainActivity的两个实例。按返回键后你会发现仍然是在MainActivity（第一个）里面。
+　　2）singleTop：singleTop 跟standard 模式比较类似。如果已经有一个实例位于Activity栈的顶部时，就不产生新的实例，而只是调用Activity中的newInstance()方法。如果不位于栈顶，会产生一个新的实例。例：当MainActivity为 singleTop 模式时，执行跳转后栈里面依旧只有一个实例，如果现在按返回键程序将直接退出。
+　　3）singleTask： singleTask模式和后面的singleInstance模式都是只创建一个实例的。在这种模式下，无论跳转的对象是不是位于栈顶的activity，程序都不会生成一个新的实例（当然前提是栈里面已经有这个实例）。这种模式相当有用，在以后的多activity开发中，经常会因为跳转的关系导致同个页面生成多个实例，这个在用户体验上始终有点不好，而如果你将对应的activity声明为 singleTask 模式，这种问题将不复存在。如果要激活的那个Activity在任务栈中存在该实例，则不需要创建，只需要把此Activity放入栈顶，并把该Activity以上的Activity实例都pop；
+　　4）singleInstance: 设置为 singleInstance 模式的 activity 将独占一个task（感觉task可以理解为进程），独占一个task的activity与其说是activity，倒不如说是一个应用，这个应用与其他activity是独立的，它有自己的上下文activity。这种启动模式比较特殊，因为它会启用一个新的栈结构，将Acitvity放置于这个新的栈结构中，并保证不再有其他Activity实例进入。
+  
+  ### android:configChanges
+ APP运行时，一些设备的配置可能会改变，如：横竖屏的切换、键盘的可用性等会导致Activity重启，即oncreate会被再次调用， 如果oncreate方法中有向服务器请求的方法，那么悲剧就会发生，相当于多次请求。这也是项目测试中通过抓包发现的问题，因此查了下，了解了android:configChanges属性，可以设置多个，中间用“|”号隔开。最常用的两个属性：
+
+"orientation" （屏幕方向改变了）和"keyboardHidden"  （ 键盘的可用性发生了改变）。
+
+详细使用 在manifest中：
+
+  <activity
+            android:name=".ui.FeedBack"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.HalfTranslucent"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
