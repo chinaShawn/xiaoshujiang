@@ -1,0 +1,35 @@
+---
+title: 过时的Android技术
+tags: 新建,模板,小书匠
+grammar_cjkRuby: true
+---
+
+
+Android的技术更新换代非常快，无论是官方的SDK推出的速度，还是各种开源的三方库出现以及更新的速度，都不足以用一个快字来形容。本文盘点那些曾经很流行技术，但是随着一些心得技术的出现，由于之前的局限性而过时。
+
+
+No. 6, Actionbar
+自从Toolbar出现以后，Actionbar的命运貌似就只能是慢慢被淘汰了。相比Actionbar，Toolbar更加灵活多变，首先Toolbar并不是Window的一部分，它可以被当作控件来放在任何地方。与此同时，Toolbar也是在Android设备上实现Material Design特效的一个重要的工具。
+
+
+No. 5, Eclipse/ADT
+自从去年年中Google官方说明了不再维护Eclipse，Eclipse恐怕真的要慢慢淡出开发者的视野了。取而代之的Android Studio集成了IntelliJ、Gradle等一些较为新的工具，因此具有更好的开发体验，在2.0的版本中更是对Emulator做了优化以及增加了动态更改代码调试的功能。尽管国内很多公司还在使用Eclipse，但Google的这些所作所为使我们相信Android Studio全面取代Eclipse的那一天并不会非常遥远。
+
+
+No. 4, Listview/Gridview
+在Listview和Gridview出生的那一天，有关使用Viewholder模式对其进行优化也就成为了使用它们的必备知识。Recyclerview对两者进行了整合，将两者的一些不同的特性用不同的LayoutManager去实现，与此同时加入了许多不同的动画效果。对于初学者而言，Recyclerview的耦合度低下，不是很容易上手。不过这并不影响Recyclerview取代Listview/Gridview的趋势。
+
+
+No. 3, Asynctask
+曾经的Asynctask被普遍运用在网络请求等一些轻量级的异步消息处理中，但是容易造成内存泄漏也是Asynctask的一个很明显的缺点。Rxjava可以使得异步消息的代码更加简洁，与此同时程序运行更加安全。尽管Rxjava的学习曲线更加陡峭，于此同时基于Rxjava的框架仍然没有成熟，但是这也不妨碍其作为一种新的趋势取代Asynctask。
+
+
+No. 2, Activity
+没错，就是Activity这个类，AppCompatActivity对Activity、FragmentActivity、ActionbarActivity、PreferenceActivity等做了整合。以后Activity以及其一系列的扩展可能都要被AppCompatActivity所取代了。
+
+
+No. 1, HttpURLConnection/HttpClient
+Apache的Http库有着很多的Bug以及版本的兼容问题。与此同时，三方的开源库可以对其进行很好的取代和缺点的弥补，其中最具代表性的就是Square公司的OkHttp。不甘落后的Google也推出了自己的Volley库。最终，Apache库在Android6.0中不再作为默认的SDK。这代表着Android应用开发正在被越来越多的三方库所改进和完善。同时也在告诉我们，Android应用的开发应当借助开源库去提高开发效率、程序的稳定性、以及用户体验。
+
+
+
