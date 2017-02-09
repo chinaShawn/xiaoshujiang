@@ -1,0 +1,80 @@
+---
+title: declare-styleable
+tags: 新建,模板,小书匠
+grammar_cjkRuby: true
+---
+
+
+### declare-styleable
+
+declare-styleable是给自定义控件添加自定义属性用的
+
+1.首先,先写attrs.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TestAttr">
+        <attr name="name" format="reference" />
+        <attr name="age">
+            <flag name="child" value="10" />
+            <flag name="young" value="18" />
+            <flag name="oldman" value="60" />
+        </attr>
+        <attr name="textSize" format="dimension" />   
+    </declare-styleable>
+</resources>
+
+
+reference指的是是从string.xml引用过来
+flag是自己定义的,类似于 android:gravity="top"
+dimension 指的是是从dimension.xml里引用过来的内容.注意,这里如果是dp那就会做像素转换
+
+
+2.在布局文件里的写法
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:attrstest="http://schemas.android.com/apk/res/com.arlos.attrstest"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >s
+
+    <com.arlos.attrstest.MyTestView
+        android:id="@+id/tvTest"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+         attrstest:name="@string/myname" 
+         android:gravity="top"
+         attrstest:age="young"
+         attrstest:textSize="@dimen/aa"
+        android:text="@string/hello" />
+
+</LinearLayout>
+
+ 2.1 先引用这个dtd
+
+xmlns:attrstest="http://schemas.android.com/apk/res/com.arlos.attrstest"
+attrstest是随便写的.后面的包名是你所在的项目的根包.也就是在manifest里的com.arlos.attrstest
+
+ 2.2 在自定义的控件里写属性
+
+3. 最后在控件的构造方法里取得这些值
+
+public class MyTestView extends TextView {
+
+    public MyTestView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        TypedArray tArray = context.obtainStyledAttributes(attrs,
+                R.styleable.TestAttr);
+        String name = tArray.getString(R.styleable.TestAttr_name);
+        System.out.println("name = " + name);
+        int age = tArray.getInt(R.styleable.TestAttr_age, 200);
+        System.out.println("age = " + age);
+         float demin = tArray.getDimension(R.styleable.TestAttr_textSize,0);
+         System.out.println("demin = " + demin);
+        tArray.recycle();
+    }
+}
