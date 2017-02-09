@@ -1,0 +1,81 @@
+---
+title: Android 中遇到的问题
+tags: java,移动开发,android
+grammar_cjkRuby: true
+---
+
+
+1. 遇到`java.lang.NoClassDefFoundError: com.nostra13.universalimageloader.core.ImageLoaderConfiguration$Builder`	找不到class文件的时候，注意java build path 里面的 order and export，需要跟随打包到apk里面去的要打包到里面去，/gen要放在/src的上面（这个不知道为什么？）。
+2. gradle的jar文件存放在C:\Users\10192984\.gradle\caches\modules-2\files-2.1路径下面。
+2. 数据库相关操作，不管是动态表还是静态表，一定要升级数据库。
+3. 在add fragment的时候一定要判断当前fragment是否已经add到activity里了，否则会报：fragment is added 的问题
+4. 在Android开发过程中，使用了大量的ListView，发现这个错误偶尔会出现。特别是做压力测试的时候，不停的点击刷新，更容易出现这个错误。代码中已经使用了Adapter的notifyDataSetChanged()方法通知UI更新了，但是还是会出现这个错误。究其根本原因，还是线程之间同步的问题。比如，线程1更新了Adapter中的内容，却还没有来得及通知内容已经更新，就又有线程2更新了Adapter中的内容，这个时候如果线程1再通知内容更新，就会出现上述异常了。在此提出一些解决办法：对线程进行管理，如果当前Actitivty暂停了，及时停止这些线程。数据更新后，要及时使用notifyDataSetChanged()方法通知UI，避免出现数据不一致的情况。数据的更新，最好放在主线程中进行。这样可以使用同步数据更新与通知内容更新部分的代码。
+5. popuwindow，dialog cannot add to window？ 								           什么情况下回出现：当界面销毁后再弹出来；或者界面跳转时我们的view发生改变，dialog依附的context发生变化或者界面未运行了。
+     + popupwindow不能在oncreate里初始化
+	   原因：PopupWindow不像对话框那样从屏幕的固定位置弹出，而是依赖于锚点控        件对象的位置，所谓锚点控件对象，就是界面组件中的某个控件，PopupWindow        的展示和功能都是以它为核心，作为锚点控件的扩展交互界面，以增强该控件对          象的功能。
+
+      + 弹出窗口与描点控件有着紧密的联系，在构造并展示弹出窗口前，需要保证锚点控件所在的控件树已经与窗口管理服务建立连接，因为在弹出窗口的展示过程中，需要通过该窗口对象来获取相关信息。在界面组件的构造过程中，窗口连接的建立是个异步过程，也就是说，当Activity.onCreate()等函数被调用时，界面与窗口管理服务的双向通信连接尚未建立，如果在此时构造弹出窗口则会抛出异常。因此，如果期望在界面组件展现之处便构造弹出窗口，可以将弹出窗口对象构造也转换成一个异步过程。
+    + 在activity的ondestroy里的需要dismiss掉upuwindow
+      调用者是activity不是context
+      线程中调用show的时候，activity已经finished
+  
+  
+ 6. fragment not addatched to activity
+    调用了如getResource()等，需要上下文Content的函数。解决方法，就是等将调用的代码写在OnStart（）中。
+    
+ 7.  Error running app: Instant Run requires 'Tools | Android | Enable ADB integration' to be enabled.今天我更新一下博文，原因是下面评论区的“桃花林里练醉拳”又给出了一种更好的解决问题的办法：菜单栏，Tools -> Adnroid -> enable ADB integration，再次感谢桃花林里练醉拳。
+
+8. Error:Gradle version 2.2 is required. Current version is 2.10. If using the gradle wrapper, try editing the distributionUrl in /Users//Desktop/gradle/wrapper/gradle-wrapper.properties to gradle-2.2-all.zip.问题
+如错误提示，可看出是当前项目的Gradle版本与AS的Gradle版本不一致造成的错误，废话不多说，看解决办法
+ + 第一步，修改项目中gradle/warpper/gradle-warpper.properties文件中的distributionUrl路劲。如下：distributionUrl=https://services.gradle.org/distributions/gradle-2.2-all.zip 
+改为你本机AS中gradle的版本 ：
+distributionUrl=https://services.gradle.org/distributions/gradle-2.10-all.zip
+ + 第二步，修改build.gradle文件中的classpath
+
+````java
+uildscript { 
+… 
+dependencies { 
+classpath ‘com.android.tools.build:gradle:1.2.3’ 
+} 
+改： 
+//你本机的AS的gradle的版本 
+uildscript { 
+… 
+dependencies { 
+classpath ‘com.android.tools.build:gradle:2.1.0’ 
+}
+````
+
+9. 关闭软键盘，imm.hideSoftInputFromWindow(passwdEdit.getWindowToken(), 0);经过测试，这是唯一有效的方法！
+
+10. listview的transcript模式
+    AbsListView.TRANSCRIPT_MODE_DISABLED    // 禁用
+    AbsListView.TRANSCRIPT_MODE_NORMAL   // 正常状态
+    AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL   // 总是滚动到最新一条
+
+
+11. extends AppCompantActivity 里的titile改用了actionbar 必须使用
+if (getSupportActionBar() != null){
+   getSupportActionBar().hide();
+}
+
+
+12. toolbar里title不显示
+
+其实解决办法很简单，只需要将 Java 代码中的最后三行改成如下所示的代码即可：
+
+mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);            
+setSupportActionBar(mActionBarToolbar);
+getSupportActionBar().setTitle("我的标题");
+
+方法2，弃用title，使用一个textview当作title
+
+
+13. recycle 更新数据不起作用
+
+有以下三个原因：
+1、数据源没有更新，调用notifyDataSetChanged无效。
+2、数据源更新了，但是它指向新的引用，调用notifyDataSetChanged无效。
+3、数据源更新了，但是adpter没有收到消息通知，无法动态更新列表。
+一般来说，我们都是第二个原因造成的。
