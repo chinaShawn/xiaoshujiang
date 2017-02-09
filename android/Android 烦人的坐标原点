@@ -1,0 +1,41 @@
+---
+title: Android 烦人的坐标原点
+tags: 新建,模板,小书匠
+grammar_cjkRuby: true
+---
+
+
+
+![图片][1]
+
+![enter description here][2]
+
+
++ getTop：获取到的，是view自身的顶边到其父布局顶边的距离
+
++ getLeft：获取到的，是view自身的左边到其父布局左边的距离
+
++ getRight：获取到的，是view自身的右边到其父布局左边的距离
+
++ getBottom：获取到的，是view自身的底边到其父布局顶边的距离
+
++ getX()：获取点击事件相对控件左边的x轴坐标，即点击事件距离控件左边的距离
+
++ getY()：获取点击事件相对控件顶边的y轴坐标，即点击事件距离控件顶边的距离
+
++ getRawX()：获取点击事件相对整个屏幕左边的x轴坐标，即点击事件距离整个屏幕左边的距离
+
++ getRawY()：获取点击事件相对整个屏幕顶边的y轴坐标，即点击事件距离整个屏幕顶边的距离。系统坐标原点。
+
+![enter description here][3]
+
+c.getLocationInWindow():坐标原点在B
+
+c.getLocationOnScreen():坐标原点在A，系统坐标原点。
+
+
+
+
+  [1]: ./images/1473298947066.jpg "android 坐标示意图"
+  [2]: ./images/1473299491267.jpg "android 坐标示意图"
+  [3]: ./images/1473299645415.jpg "坐标原点变化图"
