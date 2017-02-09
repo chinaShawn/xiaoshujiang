@@ -1,0 +1,135 @@
+---
+title:  Material Design之CoordinatorLayout+AppBarLayout实现上滑隐藏ToolBar
+tags: 新建,模板,小书匠
+
+--------
+
+在新版本的android api中提供了android.support.desgin.widget包，在其中提供了许多实现了Material Dsign设计的类，可能是gitgub上有太多Material Design的实现，google希望整合一个官方的类库供大家使用才提供了该支持包，并且这些类库可以兼容到android2.1，所以在应用中完全可以替代一些开源控件的使用。
+
+
+### AppBarLayout
+
+AppBarLayout跟它的名字一样，把容器类的组件全部作为AppBar。like this：
+
+这里写图片描述
+
+
+![appbarlayout][1]            
+
+
+这里就是把Toolbar和TabLayout放到了AppBarLayout中，让他们当做一个整体作为AppBar。
+
+
+````java
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </android.support.design.widget.AppBarLayout>
+````
+
+
+### CoordinatorLayout
+
+CoordinatorLayout是这次新添加的一个增强型的FrameLayout。在CoordinatorLayout中，我们可以在FrameLayout的基础上完成很多新的操作。
+
+Floating View
+
+MD的一个新的特性就是增加了很多可悬浮的View，像我们前面说的Floating Action Button。我们可以把FAB放在任何地方，只需要通过：
+
+android:layout_gravity="end|bottom"
+
+来指定显示的位置。同时，它还提供了layout_anchor来供你设置显示坐标的锚点：
+
+app:layout_anchor="@id/appbar"
+
+创建滚动
+
+CoordinatorLayout可以说是这次support library更新的重中之重。它从另一层面去控制子view之间触摸事件的布局，Design library中的很多控件都利用了它。
+
+> 一个很好的例子就是当你将FloatingActionButton作为一个子View添加进CoordinatorLayout并且将CoordinatorLayout传递给 Snackbar.make()，在3.0及其以上的设备上，Snackbar不会显示在悬浮按钮的上面，而是FloatingActionButton利用CoordinatorLayout提供的回调方法，在Snackbar以动画效果进入的时候自动向上移动让出位置，并且在Snackbar动画地消失的时候回到原来的位置，不需要额外的代码。
+
+
+官方的例子很好的说明了这一点：
+
+
+````java
+<android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+     <! -- Your Scrollable View -->
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                  ...
+                  app:layout_scrollFlags="scroll|enterAlways">
+
+            <android.support.design.widget.TabLayout
+                  ...
+                  app:layout_scrollFlags="scroll|enterAlways">
+     </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>
+````
+
+
+其中，一个可以滚动的组件，例如RecyclerView、ListView（这里需要注意的是，貌似只支持RecyclerView、ListView，如果你用一个ScrollView，是没有效果的）。如果： 
+1、给这个可滚动组件设置了layout_behavior 
+2、给另一个控件设置了layout_scrollFlags 
+那么，当设置了layout_behavior的控件滑动时，就会触发设置了layout_scrollFlags的控件发生状态的改变。
+
+这里写图片描述
+
+设置的layout_scrollFlags有如下几种选项：
+
+scroll: 所有想滚动出屏幕的view都需要设置这个flag- 没有设置这个flag的view将被固定在屏幕顶部。
+enterAlways: 这个flag让任意向下的滚动都会导致该view变为可见，启用快速“返回模式”。
+enterAlwaysCollapsed: 当你的视图已经设置minHeight属性又使用此标志时，你的视图只能已最小高度进入，只有当滚动视图到达顶部时才扩大到完整高度。
+exitUntilCollapsed: this flag causes the view to scroll off until it is ‘collapsed’ (its minHeight) before exiting。
+需要注意的是，后面两种模式基本只有在CollapsingToolbarLayout才有用，而前面两种模式基本是需要一起使用的，也就是说，这些flag的使用场景，基本已经固定了。 
+例如我们前面例子中的，也就是这种模式：
+
+app:layout_scrollFlags="scroll|enterAlways"
+1
+PS : 所有使用scroll flag的view都必须定义在没有使用scroll flag的view的前面，这样才能确保所有的view从顶部退出，留下固定的元素。
+
+CoordinatorLayout协同布局在一般只结合RecyclerView和NestedScrollView使用，如果我使用ListView没有效果的。但是，由于业务原因使用ListView，有需要实现协同的效果怎么办？
+
+
+对于第三点，这里拿出来单独强调一下，有没有发现滑动型控件前我用了“特殊”两个字来修饰！CoordinatorLayout之所以能够协调Children View之间的交互行为，主要就是依赖于NestedScrolling这个东西，这里涉及到两个接口类NestedScrollingParent和NestedScrollingChild。CoordinatorLayout实现了前者，而CoordinatorLayout的Children核心之一，滑动型控件，实现了后者，所以才能够做出这个交互行为。关于NestedScrolling，后续再写文单独介绍。所以，这个特殊的滑动型控件必须是实现了NestedScrollingChild接口的控件，比如v7包中的RecyclerView，看一下它的定义就知道了：
+> public class RecyclerView extends ViewGroup implements ScrollingView, NestedScrollingChild
+
+故，本文中的ViewPager里面的列表控件必须是RecyclerView。如果你仅仅是简单地使用ListView，还是达不到这样的效果。聪明如你，肯定又看出了我的措辞，对的，我又用了一个词：“简单地使用”，那就说明其实稍作处理，复杂点使用，也能够使用ListView的。
+在API Level 21及更高版本，为了支持NestedScrolling，所有控件的基类View对外新增了一个方法setNestedScrollingEnabled(boolean enabled)，所以，我们可以对ListView稍作处理，就能在Android L及以上版本的系统中使用了：
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { listView.setNestedScrollingEnabled(true); }
+我知道大家肯定要问了，有何良方可以兼容更低版本的系统呢？聪明如我，还记得以前的博客中提到的v4包中的ViewCompat类吗！它可是个好东西，总是能在兼容的问题上救民于水火，这不，这里又有解决方案啦：
+ViewCompat.setNestedScrollingEnabled(listView, true);
+
+
+
+
+
+  [1]: ./images/1473664511595.jpg "1473664511595.jpg"
+  [2]: ./images/1473664589145.jpg "1473664589145.jpg"
