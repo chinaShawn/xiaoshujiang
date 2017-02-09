@@ -1,0 +1,76 @@
+---
+title: pyhton
+tags: python, 语言
+grammar_cjkRuby: true
+---
+
+
+### 安装包分类
+可以通过下面3种途径获取python：
++ web-based installer 是需要通过联网完成安装的
++ executable installer 是可执行文件(`*.exe`)方式安装
++ embeddable zip file 嵌入式版本，可以集成到其它应用中。https://docs.python.org/3.5/using/windows.html#embedded-distribution
+上面3种途径，如果有网络，选择web-based；
+
+
+### scrapy 安装
+由于是初学者，业余学习，习惯使用windows，了解到scrapy用户很多。当然scrapy安装过程坑很多，主要是Twisted这个大坑。
+
+最近发现已经有第三方处理的Twisted包了，只需要下载和你的python对应版本的whl安装即可，比如你是用python3.5.x的，那么你要下载名字带cp35的whl文件，建议下载32位版的，最好不要32位和64位混用，以免出现不必要问题
+
+Twisted和lxml等第三方包可以在这里下载
+
+http://www.lfd.uci.edu/~gohlke/pythonlibs/#twisted
+
+安装twisted，先下载Twisted-xx.whl（比如Twisted-16.4.1-cp35-cp35m-win32.whl），然后切换到下载目录，用pip安装，命令pip install Twisted-xx.whl（Twisted-xx.whl改为 实际文件名）
+pip install scrapy。如果遇到提示缺少依赖包，请到这里找 http://www.lfd.uci.edu/~gohlke/pythonlibs/，然后pip install xx.whl （xx.whl改为实际文件名），然后重试。
+完成后，对照官方手册可以开始学习。
+中文版（scrapy 0.25） http://scrapy-chs.readthedocs.io/zh_CN/latest/
+
+英文版（最新版） http://doc.scrapy.org/en/latest/
+
+### Eclipse集成Scrapy配置调试
+
+Eclipse中安装PyDev插件后可以使用Eclipse开发Python，下面列出，如何在Eclipse中开发调试scrapy项目。
+下面假设我们已配置完并可用环境，包括：安装Python环境、Eclipse集成PyDev插件、安装scrapy环境。
+（1）新建scrapy项目。选择一个文件夹下，按住Shift并右键【在此处打开命令窗口(w)】，在dos上运行scrapy startproject tutorial,创建一个 tutorial工程，如图。
+
+![enter description here][1]
+创建成功后，目录如下
+![enter description here][2]
+
+（2）Eclipse中新建Python项目。并把（1）中新建的tutorial项目复制到Eclipse中新建的工程下，并新建一个Python启动文件如下图cmdline.py用于启动scrapy项目，其中argv第三个参数为启动爬虫的名字。如下图
+
+```java
+''''' 
+Created on 2015-8-28 
+ 
+@author: songhw 
+'''  
+import scrapy.cmdline  
+  
+if __name__ == '__main__':  
+    scrapy.cmdline.execute(argv=['scrapy','crawl','dmoz'])  
+```
+![enter description here][3]
+
+（3）配置Debug参数。打开Debug Configurations按钮，新建一个PythonRun项目，并配置如下图：
+
+![enter description here][4]
+（4）点击Debug进行调试。
+![enter description here][5]
+
+
+![enter description here][6]
+
+
+
+
+
+
+  [1]: ./images/1476691906227.jpg "1476691906227.jpg"
+  [2]: ./images/1476691920476.jpg "1476691920476.jpg"
+  [3]: ./images/1476691976834.jpg "1476691976834.jpg"
+  [4]: ./images/1476691987320.jpg "1476691987320.jpg"
+  [5]: ./images/1476691997099.jpg "1476691997099.jpg"
+  [6]: ./images/1476692009656.jpg "1476692009656.jpg"
