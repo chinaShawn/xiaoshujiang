@@ -1,0 +1,107 @@
+---
+title: xmpp
+tags: 即时通讯,openfire,xmpp
+grammar_cjkRuby: true
+---
+
+
+### XMPP(Extensible Messaging and Presence Protocol)，简单的来讲，它就是一个发送接收处理消息的协议，是XML构成的协议。正是因为使用了XML作为消息传递的中介，Extensible 才谈的上。XMPP的前身是Jabber，一个开源形式组织产生的网络即时通信协议。
+
+![enter description here][1]
+
+````java
+<?xml version='1.0'?> 
+ <stream:stream 
+       to='example.com' 
+       xmlns='jabber:client' 
+       xmlns:stream='http://etherx.jabber.org/streams' 
+       version='1.0'> 
+       <message from='juliet@example.com' 
+            to='romeo@example.net' 
+            xml:lang='en'> 
+	   		<body>Art thou not Romeo, and a Montague?</body> 
+	</message> 
+</stream:stream> 
+````
+
+### 客户端和服务端交互
+![enter description here][2]
+````java
+客户端：<?xml version='1.0'?> 
+
+   <stream:stream 
+
+       to='example.com' 
+
+       xmlns='jabber:client' 
+
+       xmlns:stream='http://etherx.jabber.org/streams' 
+
+       version='1.0'> 
+
+服务器：<?xml version='1.0'?> 
+
+   <stream:stream 
+
+       from='example.com' 
+
+       id='someid' 
+
+       xmlns='jabber:client' 
+
+       xmlns:stream='http://etherx.jabber.org/streams' 
+
+       version='1.0'> 
+
+...... 
+
+客户端：<message from='juliet@example.com' 
+
+              to='romeo@example.net' 
+
+              xml:lang='en'> 
+
+客户端： <body>Art thou not Romeo, and a Montague?</body> 
+
+客户端：</message> 
+
+服务器：<message from='romeo@example.net' 
+
+              to='juliet@example.com' 
+
+              xml:lang='en'> 
+
+服务器：<body>Neither, fair saint, if either thee dislike.</body> 
+
+服务器：</message> 
+
+客户端：</stream:stream> 
+
+服务器：</stream:stream> 
+
+````
+离线情况下：数据会被存储在服务端，然后在服务器端
+
+### XMPP 中的地址（即 Jabber ID[JID]）
+与标准电子邮件地址相似，但有着几个显著的差别。JID 包含一个可选节点、一个域和一个可选资源：
+[ node "@" ] domain [ "/" resource ]
+> 例如，示例用户在主终端主终端登录
+DavidBowman@discovery.nasa.guv/terminal）JID 
+还有一个来自eva pod 端口登录
+（DavidBowman@discovery.nasa.guv/eva_pod1）的 JID。
+
+#### 关于对JID的理解
+
+我对JID的理解主要是根据我在基于smack开发即时通信聊天应用时遇到的几种情况做的一个归纳，我碰到的JID的介绍主要有三种：
+
+ * 每个用户的好友列表中有一个JID，在我通过addFriend(String user, String nickName, String groupName)这个方法添加好友的时候，参数用户账号user最终就变成了上面的JID，是没有包含@符号和后面的服务器名的，我称这种JID为好友JID，如管理员账号的JID为：admin。这个JID通过官方提供的接口RosterEntry.getUser是可以获取到的。
+
+* 好友之间聊天时有一个JID，在我创建聊天窗口对象Chat时(怎么创建请看我下一篇文章)，所传的参数也是JID，但是这个JID和上面的JID的值却又不是一样的，格式为：好友JID@ServiceName ，这是第二种JID，我称为聊天JID,比如和管理员聊天时的JID为：admin@192.168.0.108
+
+* 好友之间传输文件时又有一个JID，在创建文件传输对象时也需要传递一个参数为JID，如果对方是Smack格式的客户端，格式是这样的：好友JID@ServiceNam/Smack，我称这种JID为文件传输JID，比如聊天时给管理员传文件时的JID为：admin@192.168.0.108/Smack，如果是spark的客户端，格式为：admin@192.168.0.108/Spark
+
+
+
+
+  [1]: ./images/1472107884592.jpg "1472107884592.jpg"
+  [2]: ./images/1472106401828.jpg "1472106401828.jpg"
