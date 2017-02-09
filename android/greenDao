@@ -1,0 +1,14 @@
+---
+title: greenDao
+tags: 新建,模板,小书匠
+grammar_cjkRuby: true
+---
+
+在androidstudio下，greenDao根据你写的bean生成相应的Dao和Master，这些直接build工程的时候，gradle中的插件自动生成。gradle中的插件是根据bean中的annotations来确定哪些java文件是真正的数据库实体。
+DaoMaster：一看名字就知道它是Dao中的最大的官了。它保存了sqlitedatebase对象以及操作DAO classes（注意：不是对象）。其提供了一些创建和删除table的静态方法，其内部类OpenHelper和DevOpenHelper实现了SQLiteOpenHelper并创建数据库的框架。
+
+DaoSession：会话层。操作具体的DAO对象（注意：是对象），比如各种getter方法。
+
+XXXDao：实际生成的某某DAO类，通常对应具体的java类，比如NoteDao等。其有更多的权限和方法来操作数据库元素。
+
+XXXEntity：持久的实体对象。通常代表了一个数据库row的标准java properties。
