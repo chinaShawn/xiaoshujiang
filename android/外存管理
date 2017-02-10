@@ -1,0 +1,329 @@
+一、简介
+关于Android的数据外部存储，在API Level 8之前，所有的文件都是建议放在Environment.getExternalStorageState()目录下的；从API Level 8开始，对于应用程序的私有文件应该放在Context.getExternalFilesDir目录下，非私有的（shared）的文件应该放在目录下Environment.getExternalStoragePublicDirectory(String)所指定的目录下。对于缓存文件应该放在Context.getExternalCacheDir()目录下。另外在准备把数据保存外部存储之前应该先通过Environment.getExternalStorageState()获取其状态，再根据其状态确定其是否可用，如果不可用，可以考虑将数据保存在内部存储中。
+关于Android的内部存储可以参照《Android中关于内部存储的一些重要函数》
+二、Context中关于外部存储的重要函数
+public abstract File getExternalCacheDir ()
+
+Since: API Level 8
+Returns the absolute path to the directory on the external filesystem (that is somewhere on Environment.getExternalStorageDirectory() where the application can place cache files it owns.
+
+This is like getCacheDir() in that these files will be deleted when the application is uninstalled, however there are some important differences:
+
+该函数像getCacheDir() 一样，保存在该目录下的文件会在卸载该应用程序时被删除。然而又有以下几点不同：
+
+The platform does not monitor the space available in external storage, and thus will not automatically delete these files. Note that you should be managing the maximum space you will use for these anyway, just like with getCacheDir(). 系统并不会监视外部存储的可用容量。因此程序员应该自己管理其占用的最大空间，自己做文件的清理机制
+External files are not always available: they will disappear if the user mounts the external storage on a computer or removes it. See the APIs onEnvironment for information in the storage state.
+There is no security enforced with these files. All applications can read and write files placed here. 系统对该目录下的文件并没做安全访问机制，所有的应用程序都可以读写该目录下的文件。
+Returns
+Returns the path of the directory holding application cache files on external storage. Returns null if external storage is not currently mounted so it could not ensure the path exists; you will need to call this method again when it is available.
+See Also
+getCacheDir()
+public abstract File getExternalFilesDir (String type)
+
+Since: API Level 8
+Returns the absolute path to the directory on the external filesystem (that is somewhere on Environment.getExternalStorageDirectory()) where the application can place persistent files it owns. These files are private to the applications, and not typically visible to the user as media.
+
+该目录下的文件对其应用程序是私有的。其目录下的文件也不会被当做多媒体文件而为用户所见
+
+This is like getFilesDir() in that these files will be deleted when the application is uninstalled, however there are some important differences:
+
+该函数像 getFilesDir()  一样，保存在该目录下的文件会在卸载该应用程序时被删除。然而又有以下几点不同：
+
+External files are not always available: they will disappear if the user mounts the external storage on a computer or removes it. See the APIs onEnvironment for information in the storage state.
+There is no security enforced with these files. All applications can read and write files placed here. 系统对该目录下的文件并没做安全访问机制，所有的应用程序都可以读写该目录下的文件。
+Here is an example of typical code to manipulate a file in an application's private storage:
+
+void createExternalStoragePrivateFile() {
+    /* Create a path where we will place our private file on external
+     storage.
+     */
+    File file = new File(getExternalFilesDir(null), "DemoFile.jpg");
+
+    try {
+        /* Very simple code to copy a picture from the application's
+           resource into the external file.  Note that this code does
+           no error checking, and assumes the picture is small (does not
+           try to copy it in chunks).  Note that if external storage is
+           not currently mounted this will silently fail.
+        */
+        InputStream is = getResources().openRawResource(R.drawable.balloons);
+        OutputStream os = new FileOutputStream(file);
+        byte[] data = new byte[is.available()];
+        is.read(data);
+        os.write(data);
+        is.close();
+        os.close();
+    } catch (IOException e) {
+        /* Unable to create file, likely because external storage is
+          not currently mounted.
+        */
+        Log.w("ExternalStorage", "Error writing " + file, e);
+    }
+}
+
+void deleteExternalStoragePrivateFile() {
+    /* Get path for the file on external storage.  If external
+      storage is not currently mounted this will fail.
+     */
+    File file = new File(getExternalFilesDir(null), "DemoFile.jpg");
+    if (file != null) {
+        file.delete();
+    }
+}
+
+boolean hasExternalStoragePrivateFile() {
+    /* Get path for the file on external storage.  If external
+       storage is not currently mounted this will fail.
+    */
+    File file = new File(getExternalFilesDir(null), "DemoFile.jpg");
+    if (file != null) {
+        return file.exists();
+    }
+    return false;
+}
+If you supply a non-null type to this function, the returned file will be a path to a sub-directory of the given type. Though these files are not automatically scanned by the media scanner, you can explicitly add them to the media database with MediaScannerConnection.scanFile. Note that this is not the same asEnvironment.getExternalStoragePublicDirectory(), which provides directories of media shared by all applications. The directories returned here are owned by the application, and their contents will be removed when the application is uninstalled. UnlikeEnvironment.getExternalStoragePublicDirectory(), the directory returned here will be automatically created for you.
+
+Here is an example of typical code to manipulate a picture in an application's private storage and add it to the media database:
+
+void createExternalStoragePrivatePicture() {
+    /* Create a path where we will place our picture in our own private
+       pictures directory.  Note that we don't really need to place a
+       picture in DIRECTORY_PICTURES, since the media scanner will see
+       all media in these directories; this may be useful with other
+       media types such as DIRECTORY_MUSIC however to help it classify
+       your media for display to the user.
+    */
+    File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    File file = new File(path, "DemoPicture.jpg");
+
+    try {
+        /* Very simple code to copy a picture from the application's
+           resource into the external file.  Note that this code does
+           no error checking, and assumes the picture is small (does not
+           try to copy it in chunks).  Note that if external storage is
+           not currently mounted this will silently fail.
+        */
+        InputStream is = getResources().openRawResource(R.drawable.balloons);
+        OutputStream os = new FileOutputStream(file);
+        byte[] data = new byte[is.available()];
+        is.read(data);
+        os.write(data);
+        is.close();
+        os.close();
+
+        /* Tell the media scanner about the new file so that it is
+          immediately available to the user.
+        */
+        MediaScannerConnection.scanFile(this,
+                new String[] { file.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+            }
+        });
+    } catch (IOException e) {
+        /* Unable to create file, likely because external storage is
+          not currently mounted.
+        */
+        Log.w("ExternalStorage", "Error writing " + file, e);
+    }
+}
+
+void deleteExternalStoragePrivatePicture() {
+    /* Create a path where we will place our picture in the user's
+      public pictures directory and delete the file.  If external
+      storage is not currently mounted this will fail.
+    */
+    File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    if (path != null) {
+        File file = new File(path, "DemoPicture.jpg");
+        file.delete();
+    }
+}
+
+boolean hasExternalStoragePrivatePicture() {
+    /* Create a path where we will place our picture in the user's
+       public pictures directory and check if the file exists.  If
+       external storage is not currently mounted this will think the
+       picture doesn't exist.
+    */
+    File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    if (path != null) {
+        File file = new File(path, "DemoPicture.jpg");
+        return file.exists();
+    }
+    return false;
+}
+Parameters
+type	 The type of files directory to return. May be null for the root of the files directory or one of the following Environment constants for a subdirectory:DIRECTORY_MUSIC, DIRECTORY_PODCASTS, DIRECTORY_RINGTONES, DIRECTORY_ALARMS, DIRECTORY_NOTIFICATIONS, DIRECTORY_PICTURES, or DIRECTORY_MOVIES.
+Returns
+Returns the path of the directory holding application files on external storage. Returns null if external storage is not currently mounted so it could not ensure the path exists; you will need to call this method again when it is available.
+See Also
+getFilesDir()
+getExternalStoragePublicDirectory(String)
+该函数返回的地址将是如下形式：/mnt/sdcard/Android/data/com.lenovo.robin/files
+其中为context所对应的应用程序的包名。
+三、Environment中关于外部存储的重要函数
+public static File getExternalStorageDirectory ()
+
+Since: API Level 1
+Gets the Android external storage directory. This directory may not currently be accessible if it has been mounted by the user on their computer, has been removed from the device, or some other problem has happened. You can determine its current state with getExternalStorageState().
+
+Note: don't be confused by the word "external" here. This directory can better be thought as media/shared storage. It is a filesystem that can hold a relatively large amount of data and that is shared across all applications (does not enforce permissions). Traditionally this is an SD card, but it may also be implemented as built-in storage in a device that is distinct from the protected internal storage and can be mounted as a filesystem on a computer.
+
+In devices with multiple "external" storage directories (such as both secure app storage and mountable shared storage), this directory represents the "primary" external storage that the user will interact with.
+
+Applications should not directly use this top-level directory, in order to avoid polluting the user's root namespace. Any files that are private to the application should be placed in a directory returned by Context.getExternalFilesDir, which the system will take care of deleting if the application is uninstalled. Other shared files should be placed in one of the directories returned by getExternalStoragePublicDirectory(String).
+
+该函数现在已经不合时宜，在API Level 8后，对于应用程序的私有文件应该放在Context.getExternalFilesDir目录下，非私有的（shared）的文件应该放在目录下Environment提供的函数getExternalStoragePublicDirectory(String)所指定的目录下
+
+Here is an example of typical code to monitor the state of external storage:
+
+BroadcastReceiver mExternalStorageReceiver;
+boolean mExternalStorageAvailable = false;
+boolean mExternalStorageWriteable = false;
+
+void updateExternalStorageState() {
+    String state = Environment.getExternalStorageState();
+    if (Environment.MEDIA_MOUNTED.equals(state)) {
+        mExternalStorageAvailable = mExternalStorageWriteable = true;
+    } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+        mExternalStorageAvailable = true;
+        mExternalStorageWriteable = false;
+    } else {
+        mExternalStorageAvailable = mExternalStorageWriteable = false;
+    }
+    handleExternalStorageState(mExternalStorageAvailable,
+            mExternalStorageWriteable);
+}
+
+void startWatchingExternalStorage() {
+    mExternalStorageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i("test", "Storage: " + intent.getData());
+            updateExternalStorageState();
+        }
+    };
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+    filter.addAction(Intent.ACTION_MEDIA_REMOVED);
+    registerReceiver(mExternalStorageReceiver, filter);
+    updateExternalStorageState();
+}
+
+void stopWatchingExternalStorage() {
+    unregisterReceiver(mExternalStorageReceiver);
+See Also
+getExternalStorageState()
+isExternalStorageRemovable()
+public static File getExternalStoragePublicDirectory (String type)
+
+Get a top-level public external storage directory for placing files of a particular type. This is where the user will typically place and manage their own files, so you should be careful about what you put here to ensure you don't erase their files or get in the way of their own organization.
+
+Here is an example of typical code to manipulate a picture on the public external storage:
+
+void createExternalStoragePublicPicture() {
+    /* Create a path where we will place our picture in the user's
+       public pictures directory.  Note that you should be careful about
+       what you place here, since the user often manages these files.  For
+       pictures and other media owned by the application, consider
+       Context.getExternalMediaDir().
+    */
+    File path = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES);
+    File file = new File(path, "DemoPicture.jpg");
+
+    try {
+        // Make sure the Pictures directory exists.
+        path.mkdirs();
+
+        /* Very simple code to copy a picture from the application's
+           resource into the external file.  Note that this code does
+           no error checking, and assumes the picture is small (does not
+           try to copy it in chunks).  Note that if external storage is
+           not currently mounted this will silently fail.
+         */
+        InputStream is = getResources().openRawResource(R.drawable.balloons);
+        OutputStream os = new FileOutputStream(file);
+        byte[] data = new byte[is.available()];
+        is.read(data);
+        os.write(data);
+        is.close();
+        os.close();
+
+        /* Tell the media scanner about the new file so that it is
+           immediately available to the user.
+        */
+        MediaScannerConnection.scanFile(this,
+                new String[] { file.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+            }
+        });
+    } catch (IOException e) {
+        /* Unable to create file, likely because external storage is
+           not currently mounted.
+        */
+        Log.w("ExternalStorage", "Error writing " + file, e);
+    }
+}
+
+void deleteExternalStoragePublicPicture() {
+    /* Create a path where we will place our picture in the user's
+       public pictures directory and delete the file.  If external
+       storage is not currently mounted this will fail.
+    */
+    File path = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES);
+    File file = new File(path, "DemoPicture.jpg");
+    file.delete();
+}
+
+boolean hasExternalStoragePublicPicture() {
+    /* Create a path where we will place our picture in the user's
+       public pictures directory and check if the file exists.  If
+       external storage is not currently mounted this will think the
+       picture doesn't exist.
+    */
+    File path = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES);
+    File file = new File(path, "DemoPicture.jpg");
+    return file.exists();
+Parameters
+type	 The type of storage directory to return. Should be one of DIRECTORY_MUSIC, DIRECTORY_PODCASTS, DIRECTORY_RINGTONES, DIRECTORY_ALARMS,DIRECTORY_NOTIFICATIONS, DIRECTORY_PICTURES,
+ DIRECTORY_MOVIES, DIRECTORY_DOWNLOADS, or DIRECTORY_DCIM. May not be null.
+Returns
+Returns the File path for the directory. Note that this directory may not yet exist, so you must make sure it exists before using it such as with File.mkdirs().
+对于Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath()返回的将是/mnt/sdcard/Movies
+public static String getExternalStorageState ()
+
+Since: API Level 1
+Gets the current state of the primary "external" storage device.
+
+See getExternalStorageDirectory() for more information.
+
+返回值可以为Environment的以下常量之一
+Constants
+String	MEDIA_BAD_REMOVAL	getExternalStorageState() returns MEDIA_BAD_REMOVAL 
+if the media was removed before it was unmounted.
+String	MEDIA_CHECKING	getExternalStorageState() returns MEDIA_CHECKING 
+if the media is present and being disk-checked
+String	MEDIA_MOUNTED	getExternalStorageState() returns MEDIA_MOUNTED 
+if the media is present and mounted at its mount point with read/write access.
+String	MEDIA_MOUNTED_READ_ONLY	getExternalStorageState() returns MEDIA_MOUNTED_READ_ONLY
+ if the media is present and mounted at its mount point with read only access.
+String	MEDIA_NOFS	getExternalStorageState() returns MEDIA_NOFS 
+if the media is present but is blank or is using an unsupported filesystem
+String	MEDIA_REMOVED	getExternalStorageState() returns MEDIA_REMOVED 
+if the media is not present.
+String	MEDIA_SHARED	getExternalStorageState() returns MEDIA_SHARED 
+if the media is present not mounted, and shared via USB mass storage.
+String	MEDIA_UNMOUNTABLE	getExternalStorageState() returns MEDIA_UNMOUNTABLE 
+if the media is present but cannot be mounted.
+String	MEDIA_UNMOUNTED	getExternalStorageState() returns MEDIA_UNMOUNTED 
+if the media is present but not mounted.
+结束
