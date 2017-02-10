@@ -1,0 +1,111 @@
+１、官方对拦截器的定义：
+         Interceptors area powerful mechanism that can monitor, rewrite, and retry calls.
+
+         拦截器可以用来转换，重试，重写请求的机制。
+
+２、两类拦截器（Interceptors）
+         拦截器的接口类：
+
+public interface Interceptor {
+  Response intercept(Chain chain) throws IOException;
+  interface Chain {
+    Request request();
+    Response proceed(Request request) throws IOException;
+    Connection connection();
+  }
+}
+          在注册拦截器时，可以注册成两类拦截器，分别为应用拦截器（Application Interceptors）和网络拦截器（Network Interceptors），如下图：
+
+          
+１）应用拦截器（ApplicationInterceptors）
+          通过下面两种方式注册的为应用拦截器：
+//方式一：在OkHttpClient.Builder中添加
+new OkHttpClient.Builder().addInterceptor(interceptor)
+
+
+//方式二：在okHttpClient中直接添加
+okHttpClient.interceptors().add(interceptor)
+         主要用于查看请求信息及返回信息，如链接地址、头信息、参数信息等，参考下面的log-拦截器定义：
+
+class LoggingInterceptor implements Interceptor {
+  @Override public Response intercept(Interceptor.Chain chain) throws IOException {
+    Request request = chain.request();
+
+
+    long t1 = System.nanoTime();
+logger.info(String.format("Sending request %s on %s%n%s", request.url(), 
+chain.connection(), request.headers()));
+
+
+    Response response = chain.proceed(request);
+    long t2 = System.nanoTime();
+    logger.info(String.format("Received response for %s in %.1fms%n%s",
+        response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+
+
+    return response;
+  }
+}
+        
+2）网络拦截器（Network Interceptors）
+        通过下面两种方式注册的为网络拦截器：
+//方式一：在OkHttpClient.Builder中添加
+new OkHttpClient.Builder().addNetworkInterceptor(interceptor)
+
+
+//方式二：在okHttpClient中直接添加
+okHttpClient. networkInterceptors().add(interceptor)
+         可以添加、删除或替换请求头信息，还可以改变的请求携带的实体。
+
+         例如，如果你连接到一个支持压缩的网络服务器你可以使用一个应用拦截器来添加请求实体压缩。
+
+/** This interceptor compresses the HTTP request body. Many webservers can't handle this! */
+/** 这个拦截器压缩了请求实体. 很多网络服务器无法处理它 */
+final class GzipRequestInterceptor implements Interceptor {
+  @Override public Response intercept(Interceptor.Chain chain) throws IOException {
+    Request originalRequest = chain.request();
+    if (originalRequest.body() == null || originalRequest.header("Content-Encoding") != null) {
+      return chain.proceed(originalRequest);
+    }
+
+
+    Request compressedRequest = originalRequest.newBuilder()
+        .header("Content-Encoding", "gzip")
+        .method(originalRequest.method(), gzip(originalRequest.body()))
+        .build();
+    return chain.proceed(compressedRequest);
+  }
+
+
+  private RequestBody gzip(final RequestBody body) {
+    return new RequestBody() {
+      @Override public MediaType contentType() {
+        return body.contentType();
+      }
+
+
+      @Override public long contentLength() {
+        return -1; // We don't know the compressed length in advance!
+      }
+
+
+      @Override public void writeTo(BufferedSink sink) throws IOException {
+        BufferedSink gzipSink = Okio.buffer(new GzipSink(sink));
+        body.writeTo(gzipSink);
+        gzipSink.close();
+      }
+    };
+  }
+}
+3、拦截器选择
+1）应用拦截器
+不需要担心中间过程的响应,如重定向和重试.
+总是只调用一次,即使HTTP响应是从缓存中获取.
+观察应用程序的初衷. 不关心OkHttp注入的头信息如: If-None-Match.
+允许短路而不调用 Chain.proceed(),即中止调用.
+允许重试,使 Chain.proceed()调用多次.
+2）网络拦截器
+能够操作中间过程的响应,如重定向和重试.
+当网络短路而返回缓存响应时不被调用.
+只观察在网络上传输的数据.
+携带请求来访问连接.
