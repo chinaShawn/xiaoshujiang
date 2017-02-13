@@ -1,4 +1,5 @@
-OKHttp中有两种拦截器，一种是Interceptor，另一种是NetworkInterceptor，关于这两种的不一样，在有网页跳转时，调用的次数是不一样的，这个在github下的相应的wiki里有介绍。https://github.com/square/okhttp/wiki/Interceptors
+OKHttp中有两种拦截器，一种是Interceptor，另一种是NetworkInterceptor，关于这两种的不一样，在有网页跳转时，调用的次数是不一样的，这个在github下的相应的wiki里有介绍。
+https://github.com/square/okhttp/wiki/Interceptors，有一篇翻译：http://www.jianshu.com/p/2710ed1e6b48（写的不错）
 还有一张图可以很明白的说明这个问题。这张图存在android 图片下了《okhttp拦截器》
 
 看我自己写的一个OkHttp拦截器的例子：
