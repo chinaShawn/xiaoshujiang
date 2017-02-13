@@ -1,0 +1,81 @@
+Okhttp是由Sqare公司开发的开源网络访问库，目前在Android和Java开发中有着广泛的应用。在Android开发中和Retrofit结合可以非常方便地调用网络接口。
+
+使用缓存可以让我们的app不用长时间地显示令人厌烦的加载圈，提高了用户体验，而且还节省了流量，在数据更新不是很频繁的地方使用缓存就非常有必要了。想要加入缓存不需要我们自己来实现，Okhttp已经内置了缓存，默认是不使用的，如果想使用缓存我们需要手动设置。
+
+服务器支持缓存
+
+如果服务器支持缓存，请求返回的Response会带有这样的Header:Cache-Control, max-age=xxx,这种情况下我们只需要手动给okhttp设置缓存就可以让okhttp自动帮你缓存了。这里的max-age的值代表了缓存在你本地存放的时间，可以根据实际需要来设置其大小。
+
+首先我们要提供了一个文件路径用来存放缓存，出于安全性的考虑，在Android中我们推荐使用Context.getCacheDir()来作为缓存的存放路径，另外还需要指定缓存的大小就可以创建一个缓存了。如下所示：
+1
+2
+3
+public Cache provideCache() {
+        return new Cache(mContext.getCacheDir(), 10240*1024);
+    }
+创建了这个缓存后我们还需要将其设置到okttpClient对象里面：
+1
+2
+3
+4
+5
+6
+OkHttpClient okHttpClient = new OkHttpClient();
+OkHttpClient newClient = okHttpClient.newBuilder()
+               .cache(cache)
+               .connectTimeout(20, TimeUnit.SECONDS)
+               .readTimeout(20, TimeUnit.SECONDS)
+               .build();
+服务器不支持缓存
+
+如果服务器不支持缓存就可能没有指定这个头部，或者指定的值是如no-store等，但是我们还想在本地使用缓存的话要怎么办呢？这种情况下我们就需要使用Interceptor来重写Respose的头部信息，从而让okhttp支持缓存。
+如下所示，我们重写的Response的Cache-Control字段
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+public class CacheInterceptor implements Interceptor {
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+        Request request = chain.request();
+        Response response = chain.proceed(request);
+        Response response1 = response.newBuilder()
+                .removeHeader("Pragma")
+                .removeHeader("Cache-Control")
+                //cache for 30 days
+                .header("Cache-Control", "max-age=" + 3600 * 24 * 30)
+                .build();
+        return response1;
+    }
+}
+然后将该Intercepter作为一个NetworkInterceptor加入到okhttpClient中：
+1
+2
+3
+4
+5
+6
+7
+8
+ OkHttpClient okHttpClient = new OkHttpClient();
+
+OkHttpClient newClient = okHttpClient.newBuilder()
+        .addNetworkInterceptor(new CacheInterceptor())
+        .cache(cache)
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .build();
+这样我们就可以在服务器不支持缓存的情况下使用缓存了。
+完整代码见github:    
+A simple Android app shows Hearthstone cards with okhttp, retrofit, dagger2 and Meterail Design 
+地址：https://github.com/Chaoba/HearthstoneCards
