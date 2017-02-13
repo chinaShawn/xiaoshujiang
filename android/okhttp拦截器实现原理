@@ -1,3 +1,4 @@
+OKHttp中有两种
 OkHttp拦截器的实现原理
 
 今天项目中遇到需要将从push接收到的数据按照协议parse成应用层需要的结构化数据类型问题；因为push消息类型繁多，等待解析出的结构化数据类型也多样，有的还需要经过几步的parse过程；而且因为项目历史原因，使用Protocal Buffer（push的数据是字节形式的传递）。中间尝试了代理、装饰等模式，都失败了，最终还是使用了原始的继承解决问题；在解决问题个过程中也学习了下OkHttp中的拦截器实现，这里做简单记录：
@@ -40,3 +41,22 @@ OkHttp拦截器的实现原理
 
  为了说明清楚，下面分别以 拦截器链中有1个、2个拦截器的场景加以模拟：
   
+
+Choosing between application and network interceptors
+
+Each interceptor chain has relative merits.
+
+Application interceptors
+
+Don't need to worry about intermediate responses like redirects and retries.
+Are always invoked once, even if the HTTP response is served from the cache.
+Observe the application's original intent. Unconcerned with OkHttp-injected headers like If-None-Match.
+Permitted to short-circuit and not call Chain.proceed().
+Permitted to retry and make multiple calls to Chain.proceed().
+Network Interceptors
+
+Able to operate on intermediate responses like redirects and retries.
+Not invoked for cached responses that short-circuit the network.
+Observe the data just as it will be transmitted over the network.
+Access to the Connection that carries the request.
+
