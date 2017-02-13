@@ -1,47 +1,50 @@
-OKHttp中有两种
-OkHttp拦截器的实现原理
+OKHttp中有两种拦截器，一种是Interceptor，另一种是NetworkInterceptor，关于这两种的不一样，在有网页跳转时，调用的次数是不一样的，这个在github下的相应的wiki里有介绍。https://github.com/square/okhttp/wiki/Interceptors
+还有一张图可以很明白的说明这个问题。这张图存在android 图片下了《okhttp拦截器》
 
-今天项目中遇到需要将从push接收到的数据按照协议parse成应用层需要的结构化数据类型问题；因为push消息类型繁多，等待解析出的结构化数据类型也多样，有的还需要经过几步的parse过程；而且因为项目历史原因，使用Protocal Buffer（push的数据是字节形式的传递）。中间尝试了代理、装饰等模式，都失败了，最终还是使用了原始的继承解决问题；在解决问题个过程中也学习了下OkHttp中的拦截器实现，这里做简单记录：
+看我自己写的一个OkHttp拦截器的例子：
+private OkHttpClient httpClient = new OkHttpClient.Builder()
+//            .addInterceptor(new HttpLoggingInterceptor(message -> Log.i("RetrofitLog","retrofitBack = "+message))
+//                    .setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addNetworkInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Log.d("OKHttp3---3","before chain proceed");
+                    okhttp3.Response response = chain.proceed(chain.request());
+                    Log.d("OKHttp3---3","after chain proceed");
+                    return response;
+                }
+            })
+            .addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Log.d("OKHttp3---1","before chain proceed");
+                    Log.d("OKHttp3---1","after chain proceed");
+                    okhttp3.Response response = chain.proceed(chain.request());
 
-﷒拦截器的接口定义如下：
-
-
-　　
-
-可以看到，在拦截器的回调中，我们可以拿到两个重要的参数Request和Response，而接口在回调时，会接收一个Chain类型的参数，这个参数保存了Request和Response的相关数据。
-
-看一个简单的Interceptor接口实现例子：
-
-    
-
-该拦截器实例的功能只是在请求发出前和接收到响应后，分别打印log。Response response=chain.proceed(request); 很重要，它是将拦截连串起来的关键。
-
-再看下，一个网络请求的应用吧：
-       
-
-跟进，OkHttpClient.Builder的addInterceptor()方法，可以看到，在OkHttp内部是使用了List保存了添加的所有拦截器。
-
-   
-
-跟进client.newCall(request).execute()；的执行过程，查看拦截器的串联过程：
-    
-
-从上面的方法中可以看到，请求默认会被构造成RealCall类型，再进一步查看RealCall的execute()方法：
-
-   
-
-上面的红色方框中这行代码，它并没有真正的执行网络请求，而只是简单地将请求放入请求池中，让它等待分派器的后续执行。而真正的执行体在上面的蓝色方框中，它封装了一个拦截器链（Chain），并调用了Chain的proced方法，传入原始的request对象，这里开始拦截器链的调用过程：
-
-   
-
-查看proceed方法，可以看到，它使用循环+递归的方式，借助函数调用栈，将拦截器串联起来：
-     
-
-上面的代码中，真正执行网络请求的是最后一行绿色方框中的代码，而当存在多个拦截器时，每个拦截器在执行时都会在上图的蓝色方框中的代码地方阻塞，等待下一个拦截器的调用返回。
-
- 为了说明清楚，下面分别以 拦截器链中有1个、2个拦截器的场景加以模拟：
-  
-
+                    return response;
+                }
+            })
+            .addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    okhttp3.Response response = chain.proceed(chain.request());
+                    Log.d("OKHttp3---2","before chain proceed");
+                    Log.d("OKHttp3---2","after chain proceed");
+                    return response;
+                }
+            })
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .cache(cache)
+            .build();
+            
+ 调用该retrofit打印出的数据应该是："OKHttp3---1","before chain proceed"--》"OKHttp3---1","after chain proceed"--》 Log.d("OKHttp3---3","before chain proceed");
+ --》"OKHttp3---3","after chain proceed"--》"OKHttp3---2","before chain proceed"--》"OKHttp3---2","after chain proceed"
+ 所有的控制打印顺序由chain.proceed(chain.request())来控制，在该条前面的流程将在请求数据中做，该条后面的流程将在数据返回的response中去做。
+ 
+            
+            
+  下面是选择哪一种interceptor的适用场景。
 Choosing between application and network interceptors
 
 Each interceptor chain has relative merits.
@@ -49,14 +52,22 @@ Each interceptor chain has relative merits.
 Application interceptors
 
 Don't need to worry about intermediate responses like redirects and retries.
+不用关心中间的重定向和重复次数的返回结果。
 Are always invoked once, even if the HTTP response is served from the cache.
+永远之后被调用一次，即使http的返回值是中缓存中拿到的。
 Observe the application's original intent. Unconcerned with OkHttp-injected headers like If-None-Match.
+观察应用最原始的意图，不不关心像lf-none-match这样的okHttp注入的头图信息。
 Permitted to short-circuit and not call Chain.proceed().
+允许短路或者不调用chain.proceed().
 Permitted to retry and make multiple calls to Chain.proceed().
+允许重复和多次调用chain.proceed().
 Network Interceptors
 
 Able to operate on intermediate responses like redirects and retries.
+有能力操作重定向和重复访问的中间结果。
 Not invoked for cached responses that short-circuit the network.
+在使用缓存的情况下没有访问网络时，不会被调用。
 Observe the data just as it will be transmitted over the network.
+观察即将通过网络传播的数据
 Access to the Connection that carries the request.
-
+获取到一个拥有request的Connection。
