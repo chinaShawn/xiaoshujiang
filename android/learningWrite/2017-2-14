@@ -25,3 +25,6 @@ jni本地调用有两个好处：第一，可以使用本地已经有的C或者C
   
   4，jni怎么去实现，写一个demo贴到这下面。
   
+5，android os的架构中，从上往下，总共包含3层结构，最底层是linux kernel，中间包含了libraries和runtime，最上层是androidFramwork，在往上就是app应用层了。
+ 
+6，android os的架构中，从上往下。
