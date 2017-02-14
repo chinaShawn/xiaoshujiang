@@ -1,1 +1,27 @@
-ss
+jni本地调用有两个好处：第一，可以使用本地已经有的C或者C++库，第二，就是一些需要速度的地方需要使用c和c++.
+1，MediaPlayer的调用，是一个jni的本地调用，底层调用的是本地的c/c++库，使用方法也很简单：
+			mPlayer = new MediaPlayer();
+			// 保险起见，设置报错监听
+			mPlayer.setOnErrorListener(new OnErrorListener() {
+
+				@Override
+				public boolean onError(MediaPlayer mp, int what, int extra) {
+					// TODO Auto-generated method stub
+					mPlayer.reset();
+					return false;
+				}
+			});
+			mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			mPlayer.setOnCompletionListener(onCompletionListener);
+			mPlayer.setDataSource(filePathString);
+			mPlayer.prepare();  //在这里调用的是android.media下面的MediaPlayer文件，
+      mPlayer.start();//在这里调用的是android.media下面的MediaPlayer文件，
+      在android.media下面的MediaPlayer文件中调用本地的方法，private native void _prepare() throws IOException, IllegalStateException;
+      和private native void _start() throws IllegalStateException;是打包在libMedia_jni.so中的（System.loadLibrary("media_jni")），但是我没有找到。
+      
+  2，进程间的通信是用Binder机制，具体机制还需要详细的了解一下。下次了解了，就贴在这个下面。
+  
+  3，了解到ndk的相关特性，ndk是干嘛的？ndk怎么干？后面有了解了贴到下面。
+  
+  4，jni怎么去实现，写一个demo贴到这下面。
+  
