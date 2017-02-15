@@ -37,3 +37,50 @@ Context.bindService()方式启动 Service的方法
 第一个：Intent对象
 第二个：ServiceConnection对象，创建该对象要实现它的onServiceConnected()和 onServiceDisconnected()来判断连接成功或者是断开连接
 第三个：如何创建Service，一般指定绑定的时候自动创建
+
+2，在利用bindService()方式启动Service的时候，我们可以里用Binder来相互传递数据，在service中使用
+   * 返回一个Binder对象 
+     */  
+    @Override  
+    public IBinder onBind(Intent intent) {  
+        return new MsgBinder();  
+    }  
+      
+    public class MsgBinder extends Binder{  
+        /** 
+         * 获取当前Service的实例 
+         * @return 
+         */  
+        public MsgService getService(){  
+            return MsgService.this;  
+        }  
+    }  
+    
+    在activity中bindService的第二个参数，如下写：
+        ServiceConnection conn = new ServiceConnection() {  
+        @Override  
+        public void onServiceDisconnected(ComponentName name) {  
+              
+        }  
+          
+        @Override  
+        public void onServiceConnected(ComponentName name, IBinder service) {  
+            //返回一个MsgService对象  
+            msgService = ((MsgService.MsgBinder)service).getService();  
+              
+            //注册回调接口来接收下载进度的变化  
+            msgService.setOnProgressListener(new OnProgressListener() {  
+                  
+                @Override  
+                public void onProgress(int progress) {  
+                    mProgressBar.setProgress(progress);  
+                      
+                }  
+            });  
+              
+        }  
+    }; 
+    
+    通过IBinder的service的方法getService来获取Service实例，则传递数据。
+    
+    另外一种方式，发广播到service里，service里注册一个接收器，然后就可以接受广播
