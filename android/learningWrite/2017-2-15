@@ -1,0 +1,39 @@
+1，广播（BroadRecevier）
+无序广播：所有跟广播的intent匹配的广播接收者都可以收到该广播，并且是没有先后顺序（同时收到）
+有序广播：所有跟广播的intent匹配的广播接收者都可以收到该广播，但是会按照广播接收者的优先级来决定接收的先后顺序
+优先级的定义：-1000~1000
+最终接收者：所有广播接收者都接收到广播之后，它才接收，并且一定会接收
+abortBroadCast：阻止其他接收者接收这条广播，类似拦截，只有有序广播可以被拦截
+
+普通广播（Normal Broadcast）：
+一，优缺点：和有序广播的优缺点相反！
+二，发送广播的方法：sendBroadcast()
+
+有序广播（Ordered Broadcast）：
+一，优缺点
+优点：1，按优先级的不同，优先Receiver可对数据进行处理，并传给下一个Receiver
+             2，通过abortBroadcast可终止广播的传播  
+缺点：效率低  
+二，发送广播的方法：sendOrderedBroadcast()   
+三，优先接收到Broadcast的Receiver可通过setResultExtras(Bundle)方法将处理结果存入Broadcast中，
+下一个Receiver 通过 Bundle bundle=getResultExtras(true)方法获取上一个 Receiver传来的数据     
+
+通过在配置文件里面注册广播属于常驻型广播，意思就是即便你应用程序结束，一旦有了对应的广播过来，其还是会被激活；而在代码里注册的广播则是非常驻型广播，比如在oncreate方法里面注册一个广播，那么在ondestroy里就可以BroadcastReceiver.abortBroadcast()，比如注册一个监听SD卡的广播。
+
+2，service
+1.Context.startService()方式启动 
+
+①Context.startService()方式的生命周期： 启动时，startService –> onCreate() –> onStart()（现在该函数已经被官方给遗弃掉了）-onStartCommand，停止时，
+stopService –> onDestroy()如果调用者直接退出而没有停止Service，则Service 会一直在后台运行 
+Context.startService()方法启动服务，在服务未被创建时，系统会先调用服务的onCreate()方法，接着调用onStart()方法。
+如果调用startService()方法前服务已经被创建，多次调用startService()方法并不会导致多次创建服务，但会导致多次调用onStart()方法。
+采用startService()方法启动的服务，只能调用Context.stopService()方法结束服务，服务结束时会调用onDestroy()方法
+
+2.Context.bindService()方式启动：①Context.bindService()方式的生命周期： 
+绑定时,bindService -> onCreate() –> onBind()
+调用者退出了，即解绑定时,Srevice就会unbindService –>onUnbind() –> onDestory()
+Context.bindService()方式启动 Service的方法
+：绑定Service需要三个参数：bindService(intent, conn, Service.BIND_AUTO_CREATE);
+第一个：Intent对象
+第二个：ServiceConnection对象，创建该对象要实现它的onServiceConnected()和 onServiceDisconnected()来判断连接成功或者是断开连接
+第三个：如何创建Service，一般指定绑定的时候自动创建
