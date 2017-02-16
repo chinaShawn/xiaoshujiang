@@ -29,6 +29,9 @@ Context.startService()方法启动服务，在服务未被创建时，系统会�
 如果调用startService()方法前服务已经被创建，多次调用startService()方法并不会导致多次创建服务，但会导致多次调用onStart()方法。
 采用startService()方法启动的服务，只能调用Context.stopService()方法结束服务，服务结束时会调用onDestroy()方法
 
+
+*onstart 方法在android2.0都已经被遗弃了，系统会调用onstartCommand，但是为了向前兼容，会在onstartCommand中调用onstart函数。
+
 2.Context.bindService()方式启动：①Context.bindService()方式的生命周期： 
 绑定时,bindService -> onCreate() –> onBind()
 调用者退出了，即解绑定时,Srevice就会unbindService –>onUnbind() –> onDestory()
