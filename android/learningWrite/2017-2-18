@@ -1,0 +1,18 @@
+1,androidstudio 内存分析
+1）首先我们要知道什么是java heap？
+java heap 是分配给事例类和数组对象运行数据区，所有java线程在运行期间共享heap中的数据，java heap dump 相当于java应用运行的时候在某个时间节点上打一个快照（snapshot）。
+2）androidstudio上怎么dump？
+只要手机借上android跑程序，内存的检测工作其实已经开始了，在Monitors里我们可以很清楚的看到内存和cpu的相关实时运行数据。而dump java heap的按钮按一下，就可以得到snapshot了。
+3）怎么去分析？
+我们自己去分析都可以，但是有现成的工具，我用的是：eclipse下的mat工具，它有独立于eclipse的版本。打开hprof文件就可以自动帮我们完成很多工作了。
+注意：anroidstudio生成的hprof文件需要转化为普通的hprof才能被mat识别，这个转化动作，在captures里右键就找到了
+分析工具有几个：
+1：使用IBM HeapAnalyzer
+     IBM HeapAnalyzer是一款免费的JVM内存堆的图形分析工具，它可以有效的列举堆的内存使用状况，帮助分析Java内存泄漏的原因。
+     下载解压后有一个ha413.jar，执行: java -Xmx512m -jar ha413.jar /home/longhao/heapdump.out
+2：jhat
+     jhat(Java Head Analyse Tool )是用来分析java堆的命令，可以将堆中的对象以html的形式显示出来，包括对象的数量，大小等等，并支持对象查询语言OQL，分析相关的应用后，可以通过http://localhost:7000来访问分析结果。
+     示例: $JAVA_HOME/bin/jhat -J-Xmx512m /home/longhao/dump.out
+3：Eclipse MemoryAnalyzer
+     Eclipse Memory Analyzer是一个快速并且功能强大的Java heap分析器，能够帮助你查找内存泄漏和减少内存消耗。在File>Acquire Heap Dump>configure>HPROF jmap dump provider设置一下分析应用的JDK，点击相关应用列表来生成heap dump并分析。
+     在socket，nio中的有些API中，申请的内存是直接想OS要的，在堆中分析内存是查看不到的，可以通过-XX:MaxDirectMemorySize=来设置应用向OS直接申请的最大内存数。 
