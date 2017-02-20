@@ -90,7 +90,14 @@ public class Singleton {
 6.集合中对象没清理造成的内存泄漏
 
 我们通常把一些对象的引用加入到了集合中，当我们不需要该对象时，并没有把它的引用从集合中清理掉，这样这个集合就会越来越大。如果这个集合是static的话，那情况就更严重了。
-
+Vector v = new Vector(10);
+ 
+for (int i = 1; i < 100; i++) {
+    Object o = new Object();
+    v.add(o);
+    o = null;
+}
+通常把一些对象的引用加入到了集合中，当我们不需要该对象时，我们只是把o的应用取消掉了，但是v对该对象还有引用。并没有把它的引用从集合中清理掉，这样这个集合就会越来越大。如果这个集合是static的话，那情况就更严重了。
 
 7，内部类的生命周期过长
 
@@ -236,6 +243,23 @@ Retained Size=当前对象大小+当前对象可直接或间接引用到的对�
 换句话说，Retained Size就是当前对象被GC后，从Heap上总共能释放掉的内存。 
 不过，释放的时候还要排除被GC Roots直接或间接引用的对象。他们暂时不会被被当做Garbage。 
 
+
+一个对象可以属于多个root，GC root有几下种：
+
+Class - 由系统类加载器(system class loader)加载的对象，这些类是不能够被回收的，他们可以以静态字段的方式保存持有其它对象。我们需要注意的一点就是，通过用户自定义的类加载器加载的类，除非相应的java.lang.Class实例以其它的某种（或多种）方式成为roots，否则它们并不是roots，.
+Thread - 活着的线程
+Stack Local - Java方法的local变量或参数
+JNI Local - JNI方法的local变量或参数
+JNI Global - 全局JNI引用
+Monitor Used - 用于同步的监控对象
+Held by JVM - 用于JVM特殊目的由GC保留的对象，但实际上这个与JVM的实现是有关的。可能已知的一些类型是：系统类加载器、一些JVM知道的重要的异常类、一些用于处理异常的预分配对象以及一些自定义的类加载器等。然而，JVM并没有为这些对象提供其它的信息，因此需要去确定哪些是属于"JVM持有"的了。
+
+
+onDestroy 中应该做的一些事情：
+1，unregist******
+2，Thread.join()
+3,MThread.getLopper.quit()
+4,关闭窗体：popuwindow，dialog
 
 
 我们遇到的问题：
