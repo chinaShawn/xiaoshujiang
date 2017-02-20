@@ -91,6 +91,153 @@ public class Singleton {
 
 我们通常把一些对象的引用加入到了集合中，当我们不需要该对象时，并没有把它的引用从集合中清理掉，这样这个集合就会越来越大。如果这个集合是static的话，那情况就更严重了。
 
+
+7，内部类的生命周期过长
+
+下面是一个存在内存泄露的例子代码，这也是比较常见的一种内存泄露的方式，就是在Activity中写一些内部类，并且这些内部类具有生命周期过长的现象
+
+我们知道上面的例子代码中我们知道内部类会持有外部类的引用，如果内部类的生命周期过长，会导致外部类内存泄露，那么你会问，我们应该怎么写那不会出现内存泄露的问题呢？既然内部类不行，我们就外部类或者static的内部类，如果我们需要用到外部类里面的一些东西，我们可以将外部类Weak Reference传递进去
+
+public class LeakActivity extends Activity {
+	private List<String> list = new ArrayList<String>();
+	
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		//模拟Activity一些其他的对象
+		for(int i=0; i<10000;i++){
+			list.add("Memory Leak!");
+		}
+		
+		//开启线程
+		new MyThread(this).start();
+		
+	}
+	
+	
+	public static class MyThread extends Thread{
+		private WeakReference<LeakActivity> mLeakActivityRef;
+		
+		public MyThread(LeakActivity activity){
+			mLeakActivityRef = new WeakReference<LeakActivity>(activity);
+		}
+
+		@Override
+		public void run() {
+			super.run();
+			
+			//模拟耗时操作
+			try {
+				Thread.sleep(10 * 60 * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			//如果需要使用LeakActivity，我们需要添加一个判断
+			LeakActivity activity = mLeakActivityRef.get();
+			if(activity != null){
+				//do something
+			}
+			
+		}
+		
+		
+	}
+}
+同理，Handler也存在同样的问题，比如下面的代码
+
+package com.example.memoryleak;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
+public class LeakActivity extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		MyHandler handler = new MyHandler();
+		handler.sendMessageDelayed(Message.obtain(), 10 * 60 * 1000);
+	}
+	
+	
+	public class MyHandler extends Handler{
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+		}
+	}
+		
+}
+我们知道使用MyHandler发送消息的时候，Message会被加入到主线程的MessageQueue里面，而每条Message的target会持有MyHandler对象，而MyHandler的this$0又会持有LeakActivity对象， 所以我们在旋转屏幕的时候，由于每条Message被延迟了 10分钟，所以必然会导致LeakActivity泄露,所以我们需要将代码进行修改下
+
+package com.example.memoryleak;
+
+import java.lang.ref.WeakReference;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
+public class LeakActivity extends Activity {
+	MyHandler handler;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		handler = new MyHandler(this);
+		handler.sendMessageDelayed(Message.obtain(), 10 * 60 * 1000);
+	}
+	
+	
+	public static class MyHandler extends Handler{
+		public WeakReference<LeakActivity> mLeakActivityRef;
+		
+		public MyHandler(LeakActivity leakActivity) {
+			mLeakActivityRef = new WeakReference<LeakActivity>(leakActivity);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			
+			if(mLeakActivityRef.get() != null){
+				//do something
+			}
+		}
+	}
+
+
+	@Override
+	protected void onDestroy() {
+		handler.removeCallbacksAndMessages(null);
+		super.onDestroy();
+	}
+		
+}
+上面的代码就能保证LeakActivity不会被泄露，注意我们在Activity的onDestory方法中使用了 handler . removeCallbacksAndMessages ( null )，这样子能保证LeakActivity退出的时候，每条Message的target  MyHandler也会被释放， 所以我们在使用非static的内部类的时候，要注意该内部类的生命周期是否比外部类要长，如果是的话我们可以使用上面的解决方法。
+
+
+Shallow Size 
+对象自身占用的内存大小，不包括它引用的对象。 
+针对非数组类型的对象，它的大小就是对象与它所有的成员变量大小的总和。当然这里面还会包括一些java语言特性的数据存储单元。 
+针对数组类型的对象，它的大小是数组元素对象的大小总和。 
+
+Retained Size 
+Retained Size=当前对象大小+当前对象可直接或间接引用到的对象的大小总和。(间接引用的含义：A->B->C, C就是间接引用) 
+换句话说，Retained Size就是当前对象被GC后，从Heap上总共能释放掉的内存。 
+不过，释放的时候还要排除被GC Roots直接或间接引用的对象。他们暂时不会被被当做Garbage。 
+
+
+
 我们遇到的问题：
 1，class java。lang.ref.FinalizerReference 的内存占用远远在前面
 https://yq.aliyun.com/articles/2947?spm=0.0.0.0.At14xp 这个帖子讲的非常详细。
@@ -103,4 +250,18 @@ https://yq.aliyun.com/articles/2947?spm=0.0.0.0.At14xp 这个帖子讲的非常�
 弱引用 (WeakReference), 引用类型表现为当系统垃圾回收器开始回收时 , 则立即会回收该对象的引用 . 与软引用一样 , 弱引用也会在运行对象的 finalize 方法之前将弱引用对象加入 ReferenceQueue.
 强引用 (FinalReference), 这是最常用的引用类型 . JVM 系统采用 Finalizer 来管理每个强引用对象 , 并将其被标记要清理时加入 ReferenceQueue, 并逐一调用该对象的 finalize() 方法 .
 虚引用 (PhantomReference), 这是一个最虚幻的引用类型 . 无论是从哪里都无法再次返回被虚引用所引用的对象 . 虚引用在系统垃圾回收器开始回收对象时 , 将直接调用 finalize() 方法 , 但不会立即将其加入回收队列 . 只有在真正对象被 GC 清除时 , 才会将其加入 Reference 队列中去 .
+
+
+
+一，上面消息的第一个部分产生GC的原因，一共有四种类型
+
+GC_CONCURRENT   当你的堆内存快被用完的时候，就会触发这个GC回收
+
+GC_FOR_MALLOC  堆内存已经满了，同时又要试图分配新的内存，所以系统要回收内存
+
+GC_EXTERNAL_ALLOC   在Android3.0 (Honeycomb)以前，释放通过外部内存（比如在2.3以前，产生的Bitmap对象存储在Native Memory中）时产生。Android3.0和更高版本中不再有这种类型的内存分配了。
+
+GC_EXPLICIT  调用System.gc时产生，上图中就是点击Cause GC按钮手动触发垃圾回收器产生的log信息
+
+
 
