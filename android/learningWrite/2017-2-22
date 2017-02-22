@@ -1,0 +1,44 @@
+1，ItemTouchHelper，ItemTouchHelperCallback
+
+建立一个SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback的类，在该类中可以有几个方法来对recycleView的滑动和拖拽起到管理作用，
+1，）
+/**
+     * 这个方法是用来设置我们拖动的方向以及侧滑的方向的
+     */
+    @Override
+    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;  
+        final int swipeFlags = ItemTouchHelper.ACTION_STATE_IDLE;
+        return makeMovementFlags(dragFlags, swipeFlags);
+
+    }
+2）    
+    /**当我们拖动item时会回调此方法*/
+    @Override
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        //如果两个item不是一个类型的，我们让他不可以拖拽
+        if (viewHolder.getItemViewType() != target.getItemViewType()){
+            return false;
+        }
+        //回调adapter中的onItemMove方法
+        onMoveAndSwipedListener.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+        return true;
+    }
+3）
+    /**当我们侧滑item时会回调此方法*/
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        //回调adapter中的onItemDismiss方法
+        onMoveAndSwipedListener.onItemDismiss(viewHolder,viewHolder.getAdapterPosition());
+    }
+    
+ 4）
+    
+    在onMoveAndSwipedListener中，我们可以把这个listener的具体实现放到adapter中去。 ItemTouchHelper.Callback callback =
+                new SimpleItemTouchHelperCallback(mAdapter);，然后在adapter中去做具体滑动和删除应该处理的动作，比如，list做出调整，notifyItemMove（）等等。
+4）在主动调用拖拽和滑动时，都有主动的方法可以调用。startDrag或者startswipe，在使用上，我们可以在adapter的onbindView方法中为需要主动拖拽的view添加一个listener，该listener实现主动拖拽过程，这个listener的实现我觉的放在activity里，因为，ItemTouchHelper需要把recycleview attach到它上面，它才能起作用。
+         touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mRecyclerView);
+        
+        这样的话，实现这个listener的真实过程，最好要放到activity里，因为，要调用touchHelper.startDrag()方法去拖拽。
+        
