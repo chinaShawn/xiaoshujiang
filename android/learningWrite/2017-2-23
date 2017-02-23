@@ -1,0 +1,3 @@
+1，在meterial design中，appbarlayout 下的 任意布局，都可以添加 app:layout_scrollFlags="scroll" 标志，该标志表示在该view在NestedScrollView拉动的时候也会跟着一起拉动，如果不加，就不会跟着一起拉动。
+2，当然，父布局中采用的是，CoordinatorLayout，在同级的内容布局采用的是NestedScrollView，这样才能达到效果。
+3，ollapsingToolbarLayout，用于设计折叠工具栏效果。ollapsingToolbarLayout作用是提供了一个可以折叠的Toolbar，它继承至FrameLayout，给它设置layout_scrollFlags，它可以控制包含在CollapsingToolbarLayout中的控件(如：ImageView、Toolbar)在响应layout_behavior事件时作出相应的scrollFlags滚动事件(移除屏幕或固定在屏幕顶端)。
