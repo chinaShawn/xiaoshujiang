@@ -1,2 +1,5 @@
 1,retrofit2的拦截器，有一张图可以很好的说明这个事情，它总共有两个拦截器，一个addInterceptor，一个addNetworkInterceptor，和struts2的拦截器是一样的，都是外层包含内层调用的，就看chain.proceed(chain.request)这个函数，在这个函数前面的，会在前面调用，在这个函数后面的，会先调用完后面的链接链之后才会调用。
 2，NetworkInterceptor的监听器只在OKHttp3上起作用，addInterceptor是加在整个retrofit2上的。
+3，retrofit2添加的缓存其实会使用从服务器上传来的head里参数来确定是否需要缓存，如果android端需要强制添加缓存的时候，其实就是在数据返回的途中，强制给数据的head中添加需要缓存的标志，这个retrofit的收到这样的返回结果后，就会把它缓存起来，不管服务端是否真的需要添加缓存。
+4，Interceptor和NetworkInterceptor还有一个不一样：
+
