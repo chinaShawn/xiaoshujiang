@@ -1,0 +1,5 @@
+1，今天最大的收获是反射，关于反射 最重要的一个类就是Class<T>类，在该类中，可以得到对象的class对象，可以得到class的方法，声明的属性，父类，实现的接口，以及父类和接口里的属性，平且可以调用方法，使用属性。
+2，动态代理最重要的两个类一个是Proxy类，这个类提供了代理类的相关功能，最重要的莫过于 newProxyInstance这个类了，生成一个代理类，用这个代理类可以做好很多事情，另外需要一个接口，InvocationHandler，该类有一个唯一需要实现的方法：invoke(Object proxy, Method method, Object[] args)，实现这个方法，就可以啦。
+
+
+3，迭代模式。Interator。
