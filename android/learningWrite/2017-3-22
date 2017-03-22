@@ -34,3 +34,32 @@ List<Integer> list = new ArrayList(){
 Array.asList(array[])得到的是一个ArrayList,但是却是Array类的一个私有类，并且这个私有类有很多的方法没有实现，Array的主要责任是针对Array数组做了很多有效的方法供我们操作数组。
 
 
+
+5，关于list的遍历中修改元素的过程，list总共有3种遍历的方式，
+
+
+
+第一种：
+    for(int i=0;i<list.size();i++){
+       list.remove(i);
+       break;
+       该方法也可以对list进行一次修改，需要在此处break挑出，否则将会报错，出错的原因主要是再遍历下一次数据的时候会做相应的检查，检查是否在遍历的时候对数据进行了修改。
+    }
+第二种：
+  for(T t: list){
+    
+  list.remove(t);
+  break;
+  该方法可以对list进行一次更改，需要在此处break跳出，否则将会报错。出错的原因主要是再遍历下一次数据的时候会做相应的检查。
+  }
+
+
+第三种：
+for(Iterator<T> it= list.isterator();it.hasNext();){
+T t = it.next();
+
+it.remove()
+it.add()
+这种方法可以进行list的遍历修改过程，并且可以修改多次，但是只能在单线程中运行，一旦在多线程中就会爆发并发错误
+}
+
