@@ -13,3 +13,24 @@ private           是    不是  不是   不是
 
 属性和方法都可以被任意的修饰限定语限定，其可达域收到类的影响。
 
+3，list的实质是用数组实现的，是对数组的一个补充，ArrayList的查询都是O（1）的时间复杂度，但是插入和删除在最坏的情况下，也就是是在位置0插入和删除，将会移动所有的元素一遍，时间复杂度变为o（n），这个时候linkedList就有了它的好处，在插入和删除的时候都是o（1）的时间复杂度，而在查询的时候最坏也是o（n）的时间复杂度。LinkedList使用的就是doubleList。
+
+class node{
+T t;
+node previous,last
+
+......
+
+}
+
+4，初始化ArrayList其实就是新建了一个ArrayList的类，然后使用static方法：
+List<Integer> list = new ArrayList(){
+{
+  add(3);
+  add(5);
+}
+}
+
+Array.asList(array[])得到的是一个ArrayList,但是却是Array类的一个私有类，并且这个私有类有很多的方法没有实现，Array的主要责任是针对Array数组做了很多有效的方法供我们操作数组。
+
+
