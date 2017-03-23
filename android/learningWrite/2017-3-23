@@ -1,0 +1,26 @@
+1，Iterator和listIterator，这两个iterator还是有所不一样的
+我们可以看一下iterator中的方法：
+    boolean hasNext();
+    E next();
+    default void remove() {
+        throw new UnsupportedOperationException("remove");
+    }
+    default void forEachRemaining(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        while (hasNext())
+            action.accept(next());
+    }
+总共就只有这四个方法。再来看看ListIterator中的方法：
+    boolean hasNext();
+    E next();
+    boolean hasPrevious();
+    E previous();
+    int nextIndex();
+    int previousIndex();
+    void remove();
+    void set(E e);
+    void add(E e);
+
+一对比很容易就出来了，多了很多个方法：hasprevious(),previous(),nextIndex(),previousIndex(),set(),add()
+这样我们就很清楚listIterator可以做到更多的事情，包括向前索引，向前遍历，添加元素，修改元素。
+但是listIterator只能针对list，对map和set不支持，而iterator都可以用。
