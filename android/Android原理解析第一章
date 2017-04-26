@@ -1,0 +1,31 @@
+---
+title: Android原理解析第一章 
+tags: Android,源码,原理
+grammar_cjkRuby: true
+
+---
+
+
+
+这里是我对于android端源码解析的过程的第一章，在这一章和今后的所有章节里，我将对android里的所有机制进行源码级别的识别和梳理，刚开始做这样的解析，肯定有很多不对的地方，随着解析的深入，见解也会加深，后面就会重新来修正这些错误。还请看到之人有包容之心指正我。
+ 
+ 第一节 android app的启动
+ 
+ 首先说一下，启动的整体大致的流程：
+ 
+ 我们在android手机上点击我们的应用app名字，其实就是在一个叫做launcher的activity里进行操作。
+ 
+ service 也是由activityManagerService来控制的
+ 
+ 
+ ![enter description here][1]
+ 
+ lancher----------》startActivity（我们app的）-----------》ActivityManagerService-------》ActivityThread----》man（启动一个looper）----》handleLaunchActivity------>
+ 
+ 
+ ![enter description here][2]
+ 
+
+
+  [1]: ./images/1493140748720.jpg "1493140748720.jpg"
+  [2]: ./images/android%20activity%20start.png "android activity start.png"
